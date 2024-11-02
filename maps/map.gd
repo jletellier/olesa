@@ -40,6 +40,12 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	if target_cell == TILE_EMPTY:
 		return true
 	
+	# Action: Object colliding with cracked wall
+	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
+		set_cell(current_pos, TILE_EMPTY)
+		set_cell(target_pos, TILE_EMPTY)
+		return true
+	
 	# Action: Object moving onto surface
 	if target_cell == TILE_SURFACE and current_cell == TILE_OBJECT:
 		set_cell(current_pos, TILE_SURFACE_OBJECT)
