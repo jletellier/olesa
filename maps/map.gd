@@ -11,9 +11,12 @@ const TILE_WALL_CRACKED := Vector2i(5, 0)
 const TILE_DOOR := Vector2i(6, 0)
 const TILE_TOOL := Vector2i(7, 0)
 
-var _current_player_pos := Vector2i(-1, -1)
+const EntitySelect := preload("res://ui/hints/entity_select.gd")
+
+var _selected_entity_pos := Vector2i.MIN
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
+@onready var _hint_entity_select := $HintEntitySelect as EntitySelect
 
 
 func _ready() -> void:
@@ -21,14 +24,17 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_focus_next"):
+		select_next_player()
+	
 	if event.is_action_pressed("game_right"):
-		move_current_player(Vector2i.RIGHT)
+		move_selected_entity(Vector2i.RIGHT)
 	elif event.is_action_pressed("game_down"):
-		move_current_player(Vector2i.DOWN)
+		move_selected_entity(Vector2i.DOWN)
 	elif event.is_action_pressed("game_left"):
-		move_current_player(Vector2i.LEFT)
+		move_selected_entity(Vector2i.LEFT)
 	elif event.is_action_pressed("game_up"):
-		move_current_player(Vector2i.UP)
+		move_selected_entity(Vector2i.UP)
 
 
 func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
@@ -61,30 +67,47 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	return false
 
 
+func update_hints(animate := false) -> void:
+	if _selected_entity_pos == Vector2i.MIN:
+		_hint_entity_select.visible = false
+		return
+	
+	_hint_entity_select.visible = true
+	_hint_entity_select.position = _block_layer.map_to_local(_selected_entity_pos)
+	if animate:
+		_hint_entity_select.animate()
+
+
 func select_next_player() -> void:
 	var used_cells := _block_layer.get_used_cells_by_id(0, TILE_PLAYER)
 	for used_cell in used_cells:
-		if used_cell != _current_player_pos:
-			_current_player_pos = used_cell
+		if used_cell != _selected_entity_pos:
+			_selected_entity_pos = used_cell
 			break
+	
+	update_hints(true)
 
 
-func move_current_player(dir: Vector2i) -> void:
-	if _current_player_pos == Vector2i(-1, -1):
+func move_selected_entity(dir: Vector2i) -> void:
+	if _selected_entity_pos == Vector2i.MIN:
 		return
 	
-	var current_pos := _current_player_pos
-	var target_pos := _current_player_pos + dir
+	var current_pos := _selected_entity_pos
+	var target_pos := _selected_entity_pos + dir
 	
 	if _simulate_physics(current_pos, target_pos):
 		move_cell(current_pos, target_pos)
-		_current_player_pos = target_pos
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 	var current_cell := get_cell(current_pos)
+	
 	set_cell(current_pos, TILE_EMPTY)
 	set_cell(target_pos, current_cell)
+	
+	if current_pos == _selected_entity_pos:
+		_selected_entity_pos = target_pos
+		update_hints()
 
 
 func get_cell(pos: Vector2i) -> Vector2i:
