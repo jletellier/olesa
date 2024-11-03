@@ -11,6 +11,9 @@ const TILE_WALL_CRACKED := Vector2i(5, 0)
 const TILE_DOOR := Vector2i(6, 0)
 const TILE_TOOL := Vector2i(7, 0)
 
+const ENTITY_LAWA := Vector2i(1, 0)
+const ENTITY_JO := Vector2i(0, 1)
+
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
 var _selected_entity_pos := Vector2i.MIN
@@ -20,21 +23,31 @@ var _selected_entity_pos := Vector2i.MIN
 
 
 func _ready() -> void:
-	select_next_player()
+	select_next_entity()
 
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
-		select_next_player()
+		select_next_entity()
+	
+	var action_dir := Vector2i.ZERO
 	
 	if event.is_action_pressed("game_right"):
-		move_selected_entity(Vector2i.RIGHT)
+		action_dir = Vector2i.RIGHT
 	elif event.is_action_pressed("game_down"):
-		move_selected_entity(Vector2i.DOWN)
+		action_dir = Vector2i.DOWN
 	elif event.is_action_pressed("game_left"):
-		move_selected_entity(Vector2i.LEFT)
+		action_dir = Vector2i.LEFT
 	elif event.is_action_pressed("game_up"):
-		move_selected_entity(Vector2i.UP)
+		action_dir = Vector2i.UP
+	
+	if action_dir != Vector2i.ZERO:
+		var selected_entity := get_cell(_selected_entity_pos)
+		match selected_entity:
+			ENTITY_LAWA: 
+				move_selected_entity(action_dir)
+			ENTITY_JO:
+				target_selected_entity(action_dir)
 
 
 func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
@@ -50,7 +63,7 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	if target_cell == TILE_PLAYER and current_cell == TILE_PLAYER:
 		set_cell(current_pos, TILE_EMPTY)
 		set_cell(target_pos, TILE_EMPTY)
-		select_next_player()
+		select_next_entity()
 		return false
 	
 	# Action: Object colliding with cracked wall
@@ -85,8 +98,11 @@ func update_hints(animate := false) -> void:
 		_hint_entity_select.animate()
 
 
-func select_next_player() -> void:
-	var used_cells := _block_layer.get_used_cells_by_id(0, TILE_PLAYER)
+func select_next_entity() -> void:
+	var used_cells: Array[Vector2i] = []
+	used_cells.append_array(_block_layer.get_used_cells_by_id(0, ENTITY_LAWA))
+	used_cells.append_array(_block_layer.get_used_cells_by_id(0, ENTITY_JO))
+	
 	if used_cells.is_empty():
 		return
 	
@@ -112,6 +128,18 @@ func move_selected_entity(dir: Vector2i) -> void:
 	
 	if _simulate_physics(current_pos, target_pos):
 		move_cell(current_pos, target_pos)
+
+
+func target_selected_entity(dir: Vector2i) -> void:
+	if _selected_entity_pos == Vector2i.MIN:
+		return
+	
+	var current_pos := _selected_entity_pos
+	var target_pos := _selected_entity_pos + dir
+	
+	var target_cell := get_cell(target_pos)
+	if target_cell == TILE_TOOL:
+		set_cell(target_pos, TILE_EMPTY)
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
