@@ -9,7 +9,10 @@ const TILE_SURFACE := Vector2i(3, 0)
 const TILE_SURFACE_OBJECT := Vector2i(4, 0)
 const TILE_WALL_CRACKED := Vector2i(5, 0)
 const TILE_DOOR := Vector2i(6, 0)
-const TILE_TOOL := Vector2i(7, 0)
+const TILE_CONTAINER := Vector2i(7, 2)
+const TILE_CONTAINER_TOOL := Vector2i(7, 0)
+
+const HINT_DOOR := Vector2i(6, 1)
 
 const ENTITY_LAWA := Vector2i(1, 0)
 const ENTITY_JO := Vector2i(0, 1)
@@ -19,6 +22,7 @@ const EntitySelect := preload("res://ui/hints/entity_select.gd")
 var _selected_entity_pos := Vector2i.MIN
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
+@onready var _hint_layer := $"HintLayer" as TileMapLayer
 @onready var _hint_entity_select := $HintEntitySelect as EntitySelect
 
 
@@ -42,12 +46,7 @@ func _input(event: InputEvent) -> void:
 		action_dir = Vector2i.UP
 	
 	if action_dir != Vector2i.ZERO:
-		var selected_entity := get_cell(_selected_entity_pos)
-		match selected_entity:
-			ENTITY_LAWA: 
-				move_selected_entity(action_dir)
-			ENTITY_JO:
-				target_selected_entity(action_dir)
+		action_selected_entity(action_dir)
 
 
 func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
@@ -59,12 +58,19 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	if target_cell == TILE_EMPTY:
 		return true
 	
-	# Action: Two players colliding causes both to dissolve
-	if target_cell == TILE_PLAYER and current_cell == TILE_PLAYER:
+	# Action: Two Lawas colliding causes both to dissolve
+	if target_cell == ENTITY_LAWA and current_cell == ENTITY_LAWA:
 		set_cell(current_pos, TILE_EMPTY)
 		set_cell(target_pos, TILE_EMPTY)
 		select_next_entity()
 		return false
+	
+	## Action: Lawa can push Jo
+	#if target_cell == ENTITY_JO and current_cell == ENTITY_LAWA:
+		#if _simulate_physics(target_pos, target_pos + dir):
+			#move_cell(target_pos, target_pos + dir)
+			#return true
+		#return false
 	
 	# Action: Object colliding with cracked wall
 	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
@@ -78,13 +84,32 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 		set_cell(target_pos, TILE_EMPTY)
 		return true
 	
-	# Action: Moving object
-	if target_cell == TILE_OBJECT:
+	# Action: In all other cases, pushing target cell
+	if target_cell in [TILE_OBJECT, ENTITY_LAWA, ENTITY_JO]:
 		if _simulate_physics(target_pos, target_pos + dir):
 			move_cell(target_pos, target_pos + dir)
 			return true
 	
 	return false
+
+
+func _simulate_logic() -> void:
+	# Process: Open/close doors depending on whether a tool is nearby
+	var used_positions := _hint_layer.get_used_cells_by_id(0, HINT_DOOR)
+	for hint_pos in used_positions:
+		var block_cell := get_cell(hint_pos)
+		if block_cell != TILE_DOOR and block_cell != TILE_EMPTY:
+			continue
+		
+		var has_tool := false
+		var surrounding_positions := _hint_layer.get_surrounding_cells(hint_pos)
+		for surrounding_pos in surrounding_positions:
+			var surrounding_cell := get_cell(surrounding_pos)
+			if surrounding_cell == TILE_CONTAINER_TOOL:
+				has_tool = true
+				break
+		
+		set_cell(hint_pos, TILE_EMPTY if has_tool else TILE_DOOR)
 
 
 func update_hints(animate := false) -> void:
@@ -119,27 +144,26 @@ func select_next_entity() -> void:
 	update_hints(true)
 
 
-func move_selected_entity(dir: Vector2i) -> void:
+func action_selected_entity(dir: Vector2i) -> void:
 	if _selected_entity_pos == Vector2i.MIN:
 		return
 	
+	var selected_entity := get_cell(_selected_entity_pos)
 	var current_pos := _selected_entity_pos
 	var target_pos := _selected_entity_pos + dir
 	
-	if _simulate_physics(current_pos, target_pos):
-		move_cell(current_pos, target_pos)
-
-
-func target_selected_entity(dir: Vector2i) -> void:
-	if _selected_entity_pos == Vector2i.MIN:
-		return
+	match selected_entity:
+		ENTITY_LAWA: 
+			if _simulate_physics(current_pos, target_pos):
+				move_cell(current_pos, target_pos)
+		ENTITY_JO:
+			var target_cell := get_cell(target_pos)
+			if target_cell == TILE_CONTAINER_TOOL:
+				set_cell(target_pos, TILE_CONTAINER)
+			elif target_cell == TILE_CONTAINER:
+				set_cell(target_pos, TILE_CONTAINER_TOOL)
 	
-	var current_pos := _selected_entity_pos
-	var target_pos := _selected_entity_pos + dir
-	
-	var target_cell := get_cell(target_pos)
-	if target_cell == TILE_TOOL:
-		set_cell(target_pos, TILE_EMPTY)
+	_simulate_logic()
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
