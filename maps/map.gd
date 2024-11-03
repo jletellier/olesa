@@ -46,6 +46,13 @@ func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	if target_cell == TILE_EMPTY:
 		return true
 	
+	# Action: Two players colliding causes both to dissolve
+	if target_cell == TILE_PLAYER and current_cell == TILE_PLAYER:
+		set_cell(current_pos, TILE_EMPTY)
+		set_cell(target_pos, TILE_EMPTY)
+		select_next_player()
+		return false
+	
 	# Action: Object colliding with cracked wall
 	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
 		set_cell(current_pos, TILE_EMPTY)
@@ -80,10 +87,18 @@ func update_hints(animate := false) -> void:
 
 func select_next_player() -> void:
 	var used_cells := _block_layer.get_used_cells_by_id(0, TILE_PLAYER)
-	for used_cell in used_cells:
-		if used_cell != _selected_entity_pos:
-			_selected_entity_pos = used_cell
+	if used_cells.is_empty():
+		return
+	
+	var current_cel_idx := -1
+	for i in range(used_cells.size()):
+		var used_cell := used_cells[i]
+		if used_cell == _selected_entity_pos:
+			current_cel_idx = i
 			break
+	
+	var next_entity_pos := (current_cel_idx + 1) % used_cells.size()
+	_selected_entity_pos = used_cells[next_entity_pos]
 	
 	update_hints(true)
 
