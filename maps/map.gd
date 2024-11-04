@@ -40,28 +40,6 @@ func _ready() -> void:
 	_convert_entities()
 
 
-func _convert_entities() -> void:
-	var cell_positions := _block_layer.get_used_cells()
-	for cell_pos in cell_positions:
-		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
-		if cell in ENTITY_SCENES:
-			# Add entity as scene
-			var entity_scene := ENTITY_SCENES[cell] as PackedScene
-			var entity := entity_scene.instantiate() as Entity
-			entity.position = _block_layer.map_to_local(cell_pos)
-			_entities_container.add_child(entity)
-			
-			# Store map of entities
-			entity.pos = cell_pos
-			_entity_map[cell_pos] = entity
-			
-			# Remove tile, since it's no longer needed
-			_block_layer.erase_cell(cell_pos)
-	
-	if _selected_entity == null:
-		select_next_entity()
-
-
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
 		select_next_entity()
@@ -77,52 +55,20 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("game_up"):
 		action_dir = Vector2i.UP
 	
-	if action_dir != Vector2i.ZERO:
-		action_selected_entity(action_dir)
+	if action_dir != Vector2i.ZERO and _selected_entity != null:
+		_selected_entity.process_action(action_dir)
 
 
-func _simulate_physics(current_pos: Vector2i, target_pos: Vector2i) -> bool:
-	var dir := target_pos - current_pos
-	
-	var current_cell := get_cell(current_pos)
-	var target_cell := get_cell(target_pos)
-	
-	if target_cell == TILE_EMPTY:
-		return true
-	
-	# Action: Two Lawas colliding causes both to dissolve
-	if target_cell == ENTITY_LAWA and current_cell == ENTITY_LAWA:
-		set_cell(current_pos, TILE_EMPTY)
-		set_cell(target_pos, TILE_EMPTY)
-		select_next_entity()
-		return false
-	
-	## Action: Lawa can push Jo
-	#if target_cell == ENTITY_JO and current_cell == ENTITY_LAWA:
-		#if _simulate_physics(target_pos, target_pos + dir):
-			#move_cell(target_pos, target_pos + dir)
-			#return true
-		#return false
-	
-	# Action: Object colliding with cracked wall
-	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
-		set_cell(current_pos, TILE_EMPTY)
-		set_cell(target_pos, TILE_EMPTY)
-		return true
-	
-	# Action: Object moving onto surface
-	if target_cell == TILE_SURFACE and current_cell == TILE_OBJECT:
-		set_cell(current_pos, TILE_SURFACE_OBJECT)
-		set_cell(target_pos, TILE_EMPTY)
-		return true
-	
-	# Action: In all other cases, pushing target cell
-	if target_cell in [TILE_OBJECT, ENTITY_LAWA, ENTITY_JO]:
-		if _simulate_physics(target_pos, target_pos + dir):
-			move_cell(target_pos, target_pos + dir)
-			return true
-	
-	return false
+func _convert_entities() -> void:
+	var cell_positions := _block_layer.get_used_cells()
+	for cell_pos in cell_positions:
+		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
+		if cell in ENTITY_SCENES:
+			var entity_scene := ENTITY_SCENES[cell] as PackedScene
+			add_entity(cell_pos, entity_scene)
+			
+			# Remove tile, since it's no longer needed
+			_block_layer.erase_cell(cell_pos)
 
 
 func _simulate_logic() -> void:
@@ -175,25 +121,64 @@ func select_next_entity() -> void:
 	update_hints(true)
 
 
-func action_selected_entity(dir: Vector2i) -> void:
+func add_entity(pos: Vector2i, scene: PackedScene) -> void:
+	var entity := scene.instantiate() as Entity
+	entity.position = _block_layer.map_to_local(pos)
+	entity.pos = pos
+	entity.move_requested.connect(_on_entity_move_requested.bind(entity))
+	entity.free_requested.connect(_on_entity_free_requested.bind(entity))
+	
+	_entity_map[pos] = entity
+	_entities_container.add_child(entity)
+	
 	if _selected_entity == null:
-		return
+		select_next_entity()
+
+
+func simulate_move(current_pos: Vector2i, target_pos: Vector2i) -> bool:
+	var dir := target_pos - current_pos
 	
-	var current_pos := _selected_entity.pos
-	var target_pos := _selected_entity.pos + dir
+	var current_cell := get_cell(current_pos)
+	var target_cell := get_cell(target_pos)
+
+	var current_entity: Entity = _entity_map.get(current_pos)
+	var target_entity: Entity = _entity_map.get(target_pos)
 	
-	match _selected_entity.type:
-		"lawa":
-			if _simulate_physics(current_pos, target_pos):
-				move_cell(current_pos, target_pos)
-		"jo":
-			var target_cell := get_cell(target_pos)
-			if target_cell == TILE_CONTAINER_TOOL:
-				set_cell(target_pos, TILE_CONTAINER)
-			elif target_cell == TILE_CONTAINER:
-				set_cell(target_pos, TILE_CONTAINER_TOOL)
+	if target_cell == TILE_EMPTY and target_entity == null:
+		return true
 	
-	_simulate_logic()
+	# Action: Object colliding with cracked wall
+	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
+		set_cell(current_pos, TILE_EMPTY)
+		set_cell(target_pos, TILE_EMPTY)
+		return true
+	
+	# Action: Object moving onto surface
+	if target_cell == TILE_SURFACE and current_cell == TILE_OBJECT:
+		set_cell(current_pos, TILE_SURFACE_OBJECT)
+		set_cell(target_pos, TILE_EMPTY)
+		return true
+	
+	# Action: Push object or other entity
+	if target_cell == TILE_OBJECT:
+		if simulate_move(target_pos, target_pos + dir):
+			move_cell(target_pos, target_pos + dir)
+			return true
+	
+	# Action: Push other entity
+	if target_entity != null:
+		if current_entity != null:
+			current_entity.collide_with(target_entity)
+			target_entity.collide_with(current_entity)
+			
+			if !current_entity.can_push(target_entity):
+				return false
+		
+		if simulate_move(target_pos, target_pos + dir):
+			move_cell(target_pos, target_pos + dir)
+			return true
+	
+	return false
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
@@ -203,10 +188,18 @@ func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 	if target_cell != TILE_EMPTY:
 		return
 	
-	if current_pos == _selected_entity.pos:
-		_selected_entity.pos = target_pos
-		_selected_entity.position = _block_layer.map_to_local(target_pos)
-		update_hints()
+	if current_pos in _entity_map:
+		var current_entity := _entity_map[current_pos] as Entity
+		
+		current_entity.pos = target_pos
+		current_entity.position = _block_layer.map_to_local(target_pos)
+		
+		_entity_map.erase(current_pos)
+		_entity_map[target_pos] = current_entity
+		
+		if current_entity == _selected_entity:
+			update_hints()
+		
 		return
 	
 	if current_cell != TILE_EMPTY:
@@ -221,3 +214,19 @@ func get_cell(pos: Vector2i) -> Vector2i:
 
 func set_cell(pos: Vector2i, cell: Vector2i) -> void:
 	_block_layer.set_cell(pos, 0, cell)
+
+
+func _on_entity_move_requested(dir: Vector2i, entity: Entity):
+	var current_pos := entity.pos
+	var target_pos := current_pos + dir
+	
+	if simulate_move(current_pos, target_pos):
+		move_cell(current_pos, target_pos)
+
+
+func _on_entity_free_requested(entity: Entity):
+	_entity_map.erase(entity.pos)
+	entity.queue_free()
+	
+	if entity == _selected_entity:
+		select_next_entity()
