@@ -1,6 +1,11 @@
 extends Node2D
 
 
+const Entity := preload("res://entities/entity.gd")
+const EntitySelect := preload("res://ui/hints/entity_select.gd")
+const LawaScene := preload("res://entities/lawa.tscn")
+const JoScene := preload("res://entities/jo.tscn")
+
 const TILE_EMPTY := Vector2i(-1, -1)
 const TILE_WALL := Vector2i(0, 0)
 const TILE_PLAYER := Vector2i(1, 0)
@@ -12,22 +17,49 @@ const TILE_DOOR := Vector2i(6, 0)
 const TILE_CONTAINER := Vector2i(7, 2)
 const TILE_CONTAINER_TOOL := Vector2i(7, 0)
 
-const HINT_DOOR := Vector2i(6, 1)
-
 const ENTITY_LAWA := Vector2i(1, 0)
 const ENTITY_JO := Vector2i(0, 1)
 
-const EntitySelect := preload("res://ui/hints/entity_select.gd")
+const HINT_DOOR := Vector2i(6, 1)
 
-var _selected_entity_pos := Vector2i.MIN
+const ENTITY_SCENES := {
+	Vector2i(1, 0): LawaScene,
+	Vector2i(0, 1): JoScene
+}
+
+var _entity_map := {} # Typing: Dictionary[Vector2i, Entity]
+var _selected_entity: Entity
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
 @onready var _hint_layer := $"HintLayer" as TileMapLayer
-@onready var _hint_entity_select := $HintEntitySelect as EntitySelect
+@onready var _entities_container := $"Entities" as Node2D
+@onready var _hint_entity_select := $Hints/EntitySelect as EntitySelect
 
 
 func _ready() -> void:
-	select_next_entity()
+	_convert_entities()
+
+
+func _convert_entities() -> void:
+	var cell_positions := _block_layer.get_used_cells()
+	for cell_pos in cell_positions:
+		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
+		if cell in ENTITY_SCENES:
+			# Add entity as scene
+			var entity_scene := ENTITY_SCENES[cell] as PackedScene
+			var entity := entity_scene.instantiate() as Entity
+			entity.position = _block_layer.map_to_local(cell_pos)
+			_entities_container.add_child(entity)
+			
+			# Store map of entities
+			entity.pos = cell_pos
+			_entity_map[cell_pos] = entity
+			
+			# Remove tile, since it's no longer needed
+			_block_layer.erase_cell(cell_pos)
+	
+	if _selected_entity == null:
+		select_next_entity()
 
 
 func _input(event: InputEvent) -> void:
@@ -113,50 +145,48 @@ func _simulate_logic() -> void:
 
 
 func update_hints(animate := false) -> void:
-	if _selected_entity_pos == Vector2i.MIN:
+	if _selected_entity == null:
 		_hint_entity_select.visible = false
 		return
 	
 	_hint_entity_select.visible = true
-	_hint_entity_select.position = _block_layer.map_to_local(_selected_entity_pos)
+	_hint_entity_select.position = _block_layer.map_to_local(_selected_entity.pos)
 	if animate:
 		_hint_entity_select.animate()
 
 
 func select_next_entity() -> void:
-	var used_cells: Array[Vector2i] = []
-	used_cells.append_array(_block_layer.get_used_cells_by_id(0, ENTITY_LAWA))
-	used_cells.append_array(_block_layer.get_used_cells_by_id(0, ENTITY_JO))
-	
-	if used_cells.is_empty():
+	if _entity_map.is_empty():
 		return
 	
-	var current_cel_idx := -1
-	for i in range(used_cells.size()):
-		var used_cell := used_cells[i]
-		if used_cell == _selected_entity_pos:
-			current_cel_idx = i
-			break
+	var current_pos_idx := -1
+	var entity_positions := _entity_map.keys()
 	
-	var next_entity_pos := (current_cel_idx + 1) % used_cells.size()
-	_selected_entity_pos = used_cells[next_entity_pos]
+	if _selected_entity != null:
+		for i in range(entity_positions.size()):
+			var entity_pos := entity_positions[i] as Vector2i
+			if entity_pos == _selected_entity.pos:
+				current_pos_idx = i
+				break
+	
+	var next_pos_idx := (current_pos_idx + 1) % entity_positions.size()
+	_selected_entity = _entity_map[entity_positions[next_pos_idx]]
 	
 	update_hints(true)
 
 
 func action_selected_entity(dir: Vector2i) -> void:
-	if _selected_entity_pos == Vector2i.MIN:
+	if _selected_entity == null:
 		return
 	
-	var selected_entity := get_cell(_selected_entity_pos)
-	var current_pos := _selected_entity_pos
-	var target_pos := _selected_entity_pos + dir
+	var current_pos := _selected_entity.pos
+	var target_pos := _selected_entity.pos + dir
 	
-	match selected_entity:
-		ENTITY_LAWA: 
+	match _selected_entity.type:
+		"lawa":
 			if _simulate_physics(current_pos, target_pos):
 				move_cell(current_pos, target_pos)
-		ENTITY_JO:
+		"jo":
 			var target_cell := get_cell(target_pos)
 			if target_cell == TILE_CONTAINER_TOOL:
 				set_cell(target_pos, TILE_CONTAINER)
@@ -168,13 +198,21 @@ func action_selected_entity(dir: Vector2i) -> void:
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 	var current_cell := get_cell(current_pos)
+	var target_cell := get_cell(target_pos)
 	
-	set_cell(current_pos, TILE_EMPTY)
-	set_cell(target_pos, current_cell)
+	if target_cell != TILE_EMPTY:
+		return
 	
-	if current_pos == _selected_entity_pos:
-		_selected_entity_pos = target_pos
+	if current_pos == _selected_entity.pos:
+		_selected_entity.pos = target_pos
+		_selected_entity.position = _block_layer.map_to_local(target_pos)
 		update_hints()
+		return
+	
+	if current_cell != TILE_EMPTY:
+		set_cell(current_pos, TILE_EMPTY)
+		set_cell(target_pos, current_cell)
+		return
 
 
 func get_cell(pos: Vector2i) -> Vector2i:
