@@ -11,6 +11,7 @@ region = Rect2(16, 0, 16, 16)
 script = ExtResource("1_r43hi")
 texture = SubResource("AtlasTexture_j2147")
 type = &"lawa"
+selectable = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")

@@ -9,6 +9,7 @@ const Entity := preload("res://entities/entity.gd")
 
 @export var texture: Texture2D
 @export var type := &""
+@export var selectable := false
 
 var pos := Vector2i.ZERO
 
@@ -35,14 +36,19 @@ func process_action(dir: Vector2i) -> void:
 func collide_with(target_entity: Entity) -> void:
 	if type == "lawa" and target_entity.type == "lawa":
 		free_requested.emit()
+		return
+	
+	if (type == "object" and target_entity.type == "wall_cracked") or \
+			(type == "wall_cracked" and target_entity.type == "object"):
+		free_requested.emit()
+		return
 
 
 func can_push(target_entity: Entity) -> bool:
 	if type == "lawa":
-		match target_entity.type:
-			"lawa":
-				return false
-			"jo":
-				return true
+		return (target_entity.type in ["jo", "object"])
+	
+	if type == "object":
+		return (target_entity.type in ["lawa", "jo", "object", "wall_cracked"])
 	
 	return false

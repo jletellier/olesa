@@ -3,8 +3,16 @@ extends Node2D
 
 const Entity := preload("res://entities/entity.gd")
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
-const LawaScene := preload("res://entities/lawa.tscn")
-const JoScene := preload("res://entities/jo.tscn")
+
+const ENTITY_SCENES := {
+	Vector2i(1, 0): preload("res://entities/lawa.tscn"),
+	Vector2i(0, 1): preload("res://entities/jo.tscn"),
+	Vector2i(2, 0): preload("res://entities/object.tscn"),
+	Vector2i(3, 0): preload("res://entities/surface.tscn"),
+	Vector2i(5, 0): preload("res://entities/wall_cracked.tscn"),
+	Vector2i(6, 0): preload("res://entities/door.tscn"),
+	Vector2i(7, 2): preload("res://entities/container.tscn"),
+}
 
 const TILE_EMPTY := Vector2i(-1, -1)
 const TILE_WALL := Vector2i(0, 0)
@@ -22,12 +30,8 @@ const ENTITY_JO := Vector2i(0, 1)
 
 const HINT_DOOR := Vector2i(6, 1)
 
-const ENTITY_SCENES := {
-	Vector2i(1, 0): LawaScene,
-	Vector2i(0, 1): JoScene
-}
-
 var _entity_map := {} # Typing: Dictionary[Vector2i, Entity]
+var _selectable_entities: Array[Entity] = []
 var _selected_entity: Entity
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
@@ -102,21 +106,19 @@ func update_hints(animate := false) -> void:
 
 
 func select_next_entity() -> void:
-	if _entity_map.is_empty():
+	if _selectable_entities.is_empty():
 		return
 	
-	var current_pos_idx := -1
-	var entity_positions := _entity_map.keys()
-	
+	var current_idx := -1
 	if _selected_entity != null:
-		for i in range(entity_positions.size()):
-			var entity_pos := entity_positions[i] as Vector2i
-			if entity_pos == _selected_entity.pos:
-				current_pos_idx = i
+		for i in range(_selectable_entities.size()):
+			var entity := _selectable_entities[i]
+			if entity.pos == _selected_entity.pos:
+				current_idx = i
 				break
 	
-	var next_pos_idx := (current_pos_idx + 1) % entity_positions.size()
-	_selected_entity = _entity_map[entity_positions[next_pos_idx]]
+	var next_idx := (current_idx + 1) % _selectable_entities.size()
+	_selected_entity = _selectable_entities[next_idx]
 	
 	update_hints(true)
 
@@ -127,11 +129,25 @@ func add_entity(pos: Vector2i, scene: PackedScene) -> void:
 	entity.pos = pos
 	entity.move_requested.connect(_on_entity_move_requested.bind(entity))
 	entity.free_requested.connect(_on_entity_free_requested.bind(entity))
-	
-	_entity_map[pos] = entity
 	_entities_container.add_child(entity)
 	
+	_entity_map[pos] = entity
+	
+	if entity.selectable:
+		_selectable_entities.append(entity)
+	
 	if _selected_entity == null:
+		select_next_entity()
+
+
+func remove_entity(entity: Entity) -> void:
+	if entity.selectable:
+		_selectable_entities.erase(entity)
+	
+	_entity_map.erase(entity.pos)
+	entity.queue_free()
+	
+	if entity == _selected_entity:
 		select_next_entity()
 
 
@@ -225,8 +241,4 @@ func _on_entity_move_requested(dir: Vector2i, entity: Entity):
 
 
 func _on_entity_free_requested(entity: Entity):
-	_entity_map.erase(entity.pos)
-	entity.queue_free()
-	
-	if entity == _selected_entity:
-		select_next_entity()
+	remove_entity(entity)
