@@ -1,9 +1,6 @@
 extends "res://entities/entity.gd"
 
 
-const EntityObject := preload("res://entities/object.gd")
-
-
 func collide_with(target_entity: Entity) -> void:
-	if target_entity is EntityObject:
+	if target_entity is EntityDB.EntityObject:
 		free_requested.emit()

@@ -8,6 +8,7 @@ signal move_requested(dir: Vector2i)
 signal free_requested()
 
 const Entity := preload("res://entities/entity.gd")
+const EntityDB := preload("res://entities/entity_db.gd")
 
 @export var texture: Texture2D
 @export var selectable := false

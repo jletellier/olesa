@@ -3,16 +3,7 @@ extends Node2D
 
 const Entity := preload("res://entities/entity.gd")
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
-
-const ENTITY_SCENES := {
-	Vector2i(1, 0): preload("res://entities/lawa.tscn"),
-	Vector2i(0, 1): preload("res://entities/jo.tscn"),
-	Vector2i(2, 0): preload("res://entities/object.tscn"),
-	Vector2i(3, 0): preload("res://entities/surface.tscn"),
-	Vector2i(5, 0): preload("res://entities/wall_cracked.tscn"),
-	Vector2i(6, 0): preload("res://entities/door.tscn"),
-	Vector2i(7, 2): preload("res://entities/container.tscn"),
-}
+const EntityDB := preload("res://entities/entity_db.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
 const TILE_WALL := Vector2i(0, 0)
@@ -24,9 +15,6 @@ const TILE_WALL_CRACKED := Vector2i(5, 0)
 const TILE_DOOR := Vector2i(6, 0)
 const TILE_CONTAINER := Vector2i(7, 2)
 const TILE_CONTAINER_TOOL := Vector2i(7, 0)
-
-const ENTITY_LAWA := Vector2i(1, 0)
-const ENTITY_JO := Vector2i(0, 1)
 
 const HINT_DOOR := Vector2i(6, 1)
 
@@ -67,8 +55,8 @@ func _convert_entities() -> void:
 	var cell_positions := _block_layer.get_used_cells()
 	for cell_pos in cell_positions:
 		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
-		if cell in ENTITY_SCENES:
-			var entity_scene := ENTITY_SCENES[cell] as PackedScene
+		if cell in EntityDB.SceneMap:
+			var entity_scene := EntityDB.SceneMap[cell] as PackedScene
 			add_entity(cell_pos, entity_scene)
 			
 			# Remove tile, since it's no longer needed
