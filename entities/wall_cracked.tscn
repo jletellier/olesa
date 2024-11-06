@@ -1,16 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://vswtppcekq0g"]
+[gd_scene load_steps=5 format=3 uid="uid://vswtppcekq0g"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_7dbmx"]
+[ext_resource type="Script" path="res://entities/wall_cracked.gd" id="1_lyk4b"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_dxdso"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmvxb"]
+atlas = ExtResource("2_dxdso")
+region = Rect2(80, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_dxdso")
 region = Rect2(80, 0, 16, 16)
 
 [node name="WallCracked" type="Node2D"]
-script = ExtResource("1_7dbmx")
-texture = SubResource("AtlasTexture_j2147")
-type = &"wall_cracked"
+script = ExtResource("1_lyk4b")
+texture = SubResource("AtlasTexture_bmvxb")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")

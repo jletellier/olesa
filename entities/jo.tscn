@@ -1,15 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=5 format=3 uid="uid://bsvas1mydwd7w"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_j38fi"]
+[ext_resource type="Script" path="res://entities/jo.gd" id="1_sv2g8"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8u30k"]
+atlas = ExtResource("2_kuyye")
+region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_kuyye")
 region = Rect2(0, 16, 16, 16)
 
 [node name="Jo" type="Node2D"]
-script = ExtResource("1_j38fi")
-texture = SubResource("AtlasTexture_j2147")
+script = ExtResource("1_sv2g8")
+texture = SubResource("AtlasTexture_8u30k")
 type = &"jo"
 selectable = true
 

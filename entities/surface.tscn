@@ -1,16 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://bo6rcyeb2v3ub"]
+[gd_scene load_steps=5 format=3 uid="uid://bo6rcyeb2v3ub"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_vrsf7"]
+[ext_resource type="Script" path="res://entities/surface.gd" id="1_sqos7"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_mhrcu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3tbfh"]
+atlas = ExtResource("2_mhrcu")
+region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_mhrcu")
 region = Rect2(48, 0, 16, 16)
 
 [node name="Surface" type="Node2D"]
-script = ExtResource("1_vrsf7")
-texture = SubResource("AtlasTexture_j2147")
-type = &"surface"
+script = ExtResource("1_sqos7")
+texture = SubResource("AtlasTexture_3tbfh")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")

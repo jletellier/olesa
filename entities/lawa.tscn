@@ -1,16 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://caugnw42x3kq2"]
+[gd_scene load_steps=5 format=3 uid="uid://caugnw42x3kq2"]
 
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="1_flunk"]
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_r43hi"]
+[ext_resource type="Script" path="res://entities/lawa.gd" id="1_w52gt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g3fdp"]
+atlas = ExtResource("1_flunk")
+region = Rect2(16, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("1_flunk")
 region = Rect2(16, 0, 16, 16)
 
 [node name="Lawa" type="Node2D"]
-script = ExtResource("1_r43hi")
-texture = SubResource("AtlasTexture_j2147")
-type = &"lawa"
+script = ExtResource("1_w52gt")
+texture = SubResource("AtlasTexture_g3fdp")
 selectable = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
