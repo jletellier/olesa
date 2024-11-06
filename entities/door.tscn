@@ -1,16 +1,20 @@
-[gd_scene load_steps=4 format=3 uid="uid://bjffhhg145jto"]
+[gd_scene load_steps=5 format=3 uid="uid://bjffhhg145jto"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_ion1v"]
+[ext_resource type="Script" path="res://entities/door.gd" id="1_2e4hr"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_1vwym"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7difk"]
+atlas = ExtResource("2_1vwym")
+region = Rect2(96, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_1vwym")
 region = Rect2(96, 0, 16, 16)
 
 [node name="Door" type="Node2D"]
-script = ExtResource("1_ion1v")
-texture = SubResource("AtlasTexture_j2147")
-type = &"door"
+script = ExtResource("1_2e4hr")
+texture = SubResource("AtlasTexture_7difk")
+process = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")

@@ -19,6 +19,7 @@ const TILE_CONTAINER_TOOL := Vector2i(7, 0)
 const HINT_DOOR := Vector2i(6, 1)
 
 var _entity_map := {} # Typing: Dictionary[Vector2i, Entity]
+var _process_entities: Array[Entity] = []
 var _selectable_entities: Array[Entity] = []
 var _selected_entity: Entity
 
@@ -30,6 +31,7 @@ var _selected_entity: Entity
 
 func _ready() -> void:
 	_convert_entities()
+	_process_logic()
 
 
 func _input(event: InputEvent) -> void:
@@ -63,23 +65,36 @@ func _convert_entities() -> void:
 			_block_layer.erase_cell(cell_pos)
 
 
-func _simulate_logic() -> void:
+func _process_logic() -> void:
+	for entity in _process_entities:
+		entity.process_logic()
 	# Process: Open/close doors depending on whether a tool is nearby
-	var used_positions := _hint_layer.get_used_cells_by_id(0, HINT_DOOR)
-	for hint_pos in used_positions:
-		var block_cell := get_cell(hint_pos)
-		if block_cell != TILE_DOOR and block_cell != TILE_EMPTY:
-			continue
-		
-		var has_tool := false
-		var surrounding_positions := _hint_layer.get_surrounding_cells(hint_pos)
-		for surrounding_pos in surrounding_positions:
-			var surrounding_cell := get_cell(surrounding_pos)
-			if surrounding_cell == TILE_CONTAINER_TOOL:
-				has_tool = true
-				break
-		
-		set_cell(hint_pos, TILE_EMPTY if has_tool else TILE_DOOR)
+	#var used_positions := _hint_layer.get_used_cells_by_id(0, HINT_DOOR)
+	#for hint_pos in used_positions:
+		#var block_cell := get_cell(hint_pos)
+		#if block_cell != TILE_DOOR and block_cell != TILE_EMPTY:
+			#continue
+		#
+		#var has_tool := false
+		#var surrounding_positions := _hint_layer.get_surrounding_cells(hint_pos)
+		#for surrounding_pos in surrounding_positions:
+			#var surrounding_cell := get_cell(surrounding_pos)
+			#if surrounding_cell == TILE_CONTAINER_TOOL:
+				#has_tool = true
+				#break
+		#
+		#set_cell(hint_pos, TILE_EMPTY if has_tool else TILE_DOOR)
+
+
+func _get_moore_neighbors(pos: Vector2i) -> Array[Entity]:
+	var neighbors: Array[Entity] = []
+	var surrounding_positions := _block_layer.get_surrounding_cells(pos)
+	for surrounding_pos in surrounding_positions:
+		var entity := _entity_map.get(surrounding_pos) as Entity
+		if entity is Entity:
+			neighbors.append(entity)
+	
+	return neighbors
 
 
 func update_hints(animate := false) -> void:
@@ -121,8 +136,13 @@ func add_entity(pos: Vector2i, scene: PackedScene) -> void:
 	
 	_entity_map[pos] = entity
 	
+	if entity.process:
+		_process_entities.append(entity)
+	
 	if entity.selectable:
 		_selectable_entities.append(entity)
+	
+	entity._get_moore_neighbors = _get_moore_neighbors
 	
 	if _selected_entity == null:
 		select_next_entity()
@@ -142,35 +162,16 @@ func remove_entity(entity: Entity) -> void:
 func simulate_move(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 	var dir := target_pos - current_pos
 	
-	var current_cell := get_cell(current_pos)
 	var target_cell := get_cell(target_pos)
-
-	var current_entity: Entity = _entity_map.get(current_pos)
 	var target_entity: Entity = _entity_map.get(target_pos)
 	
 	if target_cell == TILE_EMPTY and target_entity == null:
 		return true
 	
-	# Action: Object colliding with cracked wall
-	if target_cell == TILE_WALL_CRACKED and current_cell == TILE_OBJECT:
-		set_cell(current_pos, TILE_EMPTY)
-		set_cell(target_pos, TILE_EMPTY)
-		return true
-	
-	# Action: Object moving onto surface
-	if target_cell == TILE_SURFACE and current_cell == TILE_OBJECT:
-		set_cell(current_pos, TILE_SURFACE_OBJECT)
-		set_cell(target_pos, TILE_EMPTY)
-		return true
-	
-	# Action: Push object or other entity
-	if target_cell == TILE_OBJECT:
-		if simulate_move(target_pos, target_pos + dir):
-			move_cell(target_pos, target_pos + dir)
-			return true
-	
 	# Action: Push other entity
 	if target_entity != null:
+		var current_entity: Entity = _entity_map.get(current_pos)
+		
 		if current_entity != null:
 			current_entity.collide_with(target_entity)
 			target_entity.collide_with(current_entity)
@@ -186,12 +187,7 @@ func simulate_move(current_pos: Vector2i, target_pos: Vector2i) -> bool:
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
-	var current_cell := get_cell(current_pos)
-	var target_cell := get_cell(target_pos)
-	
-	if target_cell != TILE_EMPTY:
-		return
-	
+	# Check if entity should be moved
 	if current_pos in _entity_map:
 		var current_entity := _entity_map[current_pos] as Entity
 		
@@ -206,6 +202,8 @@ func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 		
 		return
 	
+	# Otherwise move tile
+	var current_cell := get_cell(current_pos)
 	if current_cell != TILE_EMPTY:
 		set_cell(current_pos, TILE_EMPTY)
 		set_cell(target_pos, current_cell)
