@@ -86,7 +86,7 @@ func _process_logic() -> void:
 		#set_cell(hint_pos, TILE_EMPTY if has_tool else TILE_DOOR)
 
 
-func _get_moore_neighbors(pos: Vector2i) -> Array[Entity]:
+func get_moore_neighbors(pos: Vector2i) -> Array[Entity]:
 	var neighbors: Array[Entity] = []
 	var surrounding_positions := _block_layer.get_surrounding_cells(pos)
 	for surrounding_pos in surrounding_positions:
@@ -130,8 +130,6 @@ func add_entity(pos: Vector2i, scene: PackedScene) -> void:
 	var entity := scene.instantiate() as Entity
 	entity.position = _block_layer.map_to_local(pos)
 	entity.pos = pos
-	entity.move_requested.connect(_on_entity_move_requested.bind(entity))
-	entity.free_requested.connect(_on_entity_free_requested.bind(entity))
 	_entities_container.add_child(entity)
 	
 	_entity_map[pos] = entity
@@ -142,7 +140,7 @@ func add_entity(pos: Vector2i, scene: PackedScene) -> void:
 	if entity.selectable:
 		_selectable_entities.append(entity)
 	
-	entity._get_moore_neighbors = _get_moore_neighbors
+	entity.map = self
 	
 	if _selected_entity == null:
 		select_next_entity()
@@ -218,13 +216,9 @@ func set_cell(pos: Vector2i, cell: Vector2i) -> void:
 	_block_layer.set_cell(pos, 0, cell)
 
 
-func _on_entity_move_requested(dir: Vector2i, entity: Entity):
+func move_entity(dir: Vector2i, entity: Entity) -> void:
 	var current_pos := entity.pos
 	var target_pos := current_pos + dir
 	
 	if simulate_move(current_pos, target_pos):
 		move_cell(current_pos, target_pos)
-
-
-func _on_entity_free_requested(entity: Entity):
-	remove_entity(entity)

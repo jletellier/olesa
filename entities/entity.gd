@@ -1,12 +1,7 @@
 extends Node2D
 
 
-@warning_ignore("unused_signal")
-signal move_requested(dir: Vector2i)
-
-@warning_ignore("unused_signal")
-signal free_requested()
-
+const Map := preload("res://maps/map.gd")
 const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 
@@ -15,8 +10,7 @@ const EntityDB := preload("res://entities/entity_db.gd")
 @export var process := false
 
 var pos := Vector2i.ZERO
-
-var _get_moore_neighbors: Callable
+var map: Map
 
 @onready var _sprite := $"Sprite2D" as Sprite2D
 
