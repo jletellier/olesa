@@ -157,38 +157,39 @@ func remove_entity(entity: Entity) -> void:
 		select_next_entity()
 
 
-func simulate_move(current_pos: Vector2i, target_pos: Vector2i) -> bool:
-	var dir := target_pos - current_pos
+func move_entity(entity: Entity, dir: Vector2i) -> void:
+	cascade_push(entity.pos, dir)
+	_process_logic()
+
+
+func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
+	var target_pos := current_pos + dir
 	
+	var current_entity: Entity = _entity_map.get(current_pos)
+	var cascade_entity: Entity = _entity_map.get(target_pos)
+	
+	# Cascade push as long as there are entities
+	if current_entity != null and cascade_entity != null:
+		if current_entity.can_push(cascade_entity):
+			cascade_push(target_pos, dir)
+		
+		current_entity.collide_with(cascade_entity)
+		cascade_entity.collide_with(current_entity)
+	
+	# Fetch target cell/entity again, in case it has been moved/removed
 	var target_cell := get_cell(target_pos)
 	var target_entity: Entity = _entity_map.get(target_pos)
 	
+	# Action: Target is empty
 	if target_cell == TILE_EMPTY and target_entity == null:
-		return true
-	
-	# Action: Push other entity
-	if target_entity != null:
-		var current_entity: Entity = _entity_map.get(current_pos)
-		
-		if current_entity != null:
-			current_entity.collide_with(target_entity)
-			target_entity.collide_with(current_entity)
-			
-			if !current_entity.can_push(target_entity):
-				return false
-		
-		if simulate_move(target_pos, target_pos + dir):
-			move_cell(target_pos, target_pos + dir)
-			return true
-	
-	return false
+		move_cell(current_pos, target_pos)
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
-	# Check if entity should be moved
-	if current_pos in _entity_map:
-		var current_entity := _entity_map[current_pos] as Entity
-		
+	var current_entity: Entity = _entity_map.get(current_pos)
+	
+	# Move entity
+	if current_entity != null:
 		current_entity.pos = target_pos
 		current_entity.position = _block_layer.map_to_local(target_pos)
 		
@@ -214,11 +215,3 @@ func get_cell(pos: Vector2i) -> Vector2i:
 
 func set_cell(pos: Vector2i, cell: Vector2i) -> void:
 	_block_layer.set_cell(pos, 0, cell)
-
-
-func move_entity(dir: Vector2i, entity: Entity) -> void:
-	var current_pos := entity.pos
-	var target_pos := current_pos + dir
-	
-	if simulate_move(current_pos, target_pos):
-		move_cell(current_pos, target_pos)

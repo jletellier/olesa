@@ -14,7 +14,6 @@ region = Rect2(0, 16, 16, 16)
 [node name="Jo" type="Node2D"]
 script = ExtResource("1_sv2g8")
 texture = SubResource("AtlasTexture_8u30k")
-type = &"jo"
 selectable = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
