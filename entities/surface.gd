@@ -1,7 +1,8 @@
 extends "res://entities/entity.gd"
 
 
-@export var texture_object : Texture2D
+@export var texture_object: Texture2D
+
 var has_object := false
 
 

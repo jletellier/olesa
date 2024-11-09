@@ -18,7 +18,7 @@ const TILE_CONTAINER_TOOL := Vector2i(7, 0)
 
 const HINT_DOOR := Vector2i(6, 1)
 
-var _entity_map := {} # Typing: Dictionary[Vector2i, Entity]
+var _entity_map := {} # Typing: Dictionary[Vector3i, Entity]
 var _process_entities: Array[Entity] = []
 var _selectable_entities: Array[Entity] = []
 var _selected_entity: Entity
@@ -68,30 +68,15 @@ func _convert_entities() -> void:
 func _process_logic() -> void:
 	for entity in _process_entities:
 		entity.process_logic()
-	# Process: Open/close doors depending on whether a tool is nearby
-	#var used_positions := _hint_layer.get_used_cells_by_id(0, HINT_DOOR)
-	#for hint_pos in used_positions:
-		#var block_cell := get_cell(hint_pos)
-		#if block_cell != TILE_DOOR and block_cell != TILE_EMPTY:
-			#continue
-		#
-		#var has_tool := false
-		#var surrounding_positions := _hint_layer.get_surrounding_cells(hint_pos)
-		#for surrounding_pos in surrounding_positions:
-			#var surrounding_cell := get_cell(surrounding_pos)
-			#if surrounding_cell == TILE_CONTAINER_TOOL:
-				#has_tool = true
-				#break
-		#
-		#set_cell(hint_pos, TILE_EMPTY if has_tool else TILE_DOOR)
 
 
-func get_moore_neighbors(pos: Vector2i) -> Array[Entity]:
+func get_moore_neighbors(pos: Vector2i, layer := 0) -> Array[Entity]:
 	var neighbors: Array[Entity] = []
 	var surrounding_positions := _block_layer.get_surrounding_cells(pos)
 	for surrounding_pos in surrounding_positions:
-		var entity := _entity_map.get(surrounding_pos) as Entity
-		if entity is Entity:
+		var entity: Entity = _entity_map.get(
+				Vector3i(surrounding_pos.x, surrounding_pos.y, layer))
+		if entity != null:
 			neighbors.append(entity)
 	
 	return neighbors
@@ -132,7 +117,7 @@ func add_entity(pos: Vector2i, scene: PackedScene) -> void:
 	entity.pos = pos
 	_entities_container.add_child(entity)
 	
-	_entity_map[pos] = entity
+	_entity_map[Vector3i(pos.x, pos.y, entity.layer)] = entity
 	
 	if entity.process:
 		_process_entities.append(entity)
@@ -150,7 +135,7 @@ func remove_entity(entity: Entity) -> void:
 	if entity.selectable:
 		_selectable_entities.erase(entity)
 	
-	_entity_map.erase(entity.pos)
+	_entity_map.erase(Vector3i(entity.pos.x, entity.pos.y, entity.layer))
 	entity.queue_free()
 	
 	if entity == _selected_entity:
@@ -165,8 +150,8 @@ func move_entity(entity: Entity, dir: Vector2i) -> void:
 func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
 	var target_pos := current_pos + dir
 	
-	var current_entity: Entity = _entity_map.get(current_pos)
-	var cascade_entity: Entity = _entity_map.get(target_pos)
+	var current_entity: Entity = _entity_map.get(Vector3i(current_pos.x, current_pos.y, 0))
+	var cascade_entity: Entity = _entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
 	
 	# Cascade push as long as there are entities
 	if current_entity != null and cascade_entity != null:
@@ -178,7 +163,7 @@ func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
 	
 	# Fetch target cell/entity again, in case it has been moved/removed
 	var target_cell := get_cell(target_pos)
-	var target_entity: Entity = _entity_map.get(target_pos)
+	var target_entity: Entity = _entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
 	
 	# Action: Target is empty
 	if target_cell == TILE_EMPTY and target_entity == null:
@@ -186,15 +171,15 @@ func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
 
 
 func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
-	var current_entity: Entity = _entity_map.get(current_pos)
+	var current_entity: Entity = _entity_map.get(Vector3i(current_pos.x, current_pos.y, 0))
 	
 	# Move entity
 	if current_entity != null:
 		current_entity.pos = target_pos
 		current_entity.position = _block_layer.map_to_local(target_pos)
 		
-		_entity_map.erase(current_pos)
-		_entity_map[target_pos] = current_entity
+		_entity_map.erase(Vector3i(current_pos.x, current_pos.y, 0))
+		_entity_map[Vector3i(target_pos.x, target_pos.y, 0)] = current_entity
 		
 		if current_entity == _selected_entity:
 			update_hints()

@@ -12,6 +12,10 @@ const EntityDB := preload("res://entities/entity_db.gd")
 @export var process := false
 
 var pos := Vector2i.ZERO
+
+var layer := 0:
+	set = _set_layer
+
 var map: Map
 
 @onready var _sprite := $"Sprite2D" as Sprite2D
@@ -40,3 +44,10 @@ func _set_texture(value: Texture2D) -> void:
 	texture = value
 	if _sprite != null:
 		_sprite.texture = texture
+
+
+func _set_layer(value: int) -> void:
+	if map != null:
+		map._entity_map.erase(Vector3i(pos.x, pos.y, layer))
+		layer = value
+		map._entity_map[Vector3i(pos.x, pos.y, layer)] = self
