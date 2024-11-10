@@ -6,25 +6,15 @@ const EntitySelect := preload("res://ui/hints/entity_select.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
-const TILE_WALL := Vector2i(0, 0)
-const TILE_PLAYER := Vector2i(1, 0)
-const TILE_OBJECT := Vector2i(2, 0)
-const TILE_SURFACE := Vector2i(3, 0)
-const TILE_SURFACE_OBJECT := Vector2i(4, 0)
-const TILE_WALL_CRACKED := Vector2i(5, 0)
-const TILE_DOOR := Vector2i(6, 0)
-const TILE_CONTAINER := Vector2i(7, 2)
-const TILE_CONTAINER_TOOL := Vector2i(7, 0)
-
-const HINT_DOOR := Vector2i(6, 1)
 
 var _entity_map := {} # Typing: Dictionary[Vector3i, Entity]
 var _process_entities: Array[Entity] = []
 var _selectable_entities: Array[Entity] = []
 var _selected_entity: Entity
+var _history := []
+var _history_transaction := []
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
-@onready var _hint_layer := $"HintLayer" as TileMapLayer
 @onready var _entities_container := $"Entities" as Node2D
 @onready var _hint_entity_select := $Hints/EntitySelect as EntitySelect
 
@@ -37,6 +27,9 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
 		select_next_entity()
+	
+	if event.is_action_pressed("game_undo"):
+		history_undo()
 	
 	var action_dir := Vector2i.ZERO
 	
@@ -51,6 +44,7 @@ func _input(event: InputEvent) -> void:
 	
 	if action_dir != Vector2i.ZERO and _selected_entity != null:
 		_selected_entity.process_action(action_dir)
+		_history_transaction_save()
 
 
 func _convert_entities() -> void:
@@ -65,9 +59,49 @@ func _convert_entities() -> void:
 			_block_layer.erase_cell(cell_pos)
 
 
+func _history_transaction_add(coords: Vector3i,
+		entity: Entity = null, old_cell := TILE_EMPTY) -> void:
+	var step := [coords, entity, old_cell]
+	_history_transaction.append(step)
+
+
+func _history_transaction_undo(transaction := []) -> void:
+	if transaction.size() == 0:
+		transaction = _history_transaction
+	
+	for i in range(transaction.size() - 1, -1, -1):
+		var step := transaction[i] as Array
+		var coords := step[0] as Vector3i
+		var pos := Vector2i(coords.x, coords.y)
+		var layer := coords.z
+		var entity := step[1] as Entity
+		var old_cell := step[2] as Vector2i
+		
+		if entity != null:
+			move_cell(entity.pos, pos)
+	
+	_history_transaction = []
+
+
+func _history_transaction_save() -> void:
+	if _history_transaction.size() == 0:
+		return
+
+	_history.push_back(_history_transaction)
+	_history_transaction = []
+
+
 func _process_logic() -> void:
 	for entity in _process_entities:
 		entity.process_logic()
+
+
+func history_undo() -> void:
+	if _history.is_empty():
+		return
+	
+	var transaction := _history.pop_back() as Array
+	_history_transaction_undo(transaction)
 
 
 func get_moore_neighbors(pos: Vector2i, layer := 0) -> Array[Entity]:
@@ -184,6 +218,7 @@ func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 		if current_entity == _selected_entity:
 			update_hints()
 		
+		_history_transaction_add(Vector3i(current_pos.x, current_pos.y, 0), current_entity)
 		return
 	
 	# Otherwise move tile
@@ -191,6 +226,7 @@ func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
 	if current_cell != TILE_EMPTY:
 		set_cell(current_pos, TILE_EMPTY)
 		set_cell(target_pos, current_cell)
+		_history_transaction_add(Vector3i(current_pos.x, current_pos.y, 0), null, current_cell)
 		return
 
 
