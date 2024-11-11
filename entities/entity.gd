@@ -5,13 +5,16 @@ const Map := preload("res://maps/map.gd")
 const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 
+signal history_transaction(entity: Entity, attribute: String, value: Variant)
+
 @export var texture: Texture2D:
 	set = _set_texture
 		
 @export var selectable := false
 @export var process := false
 
-var pos := Vector2i.ZERO
+var pos := Vector2i.ZERO:
+	set = _set_pos
 
 var layer := 0:
 	set = _set_layer
@@ -46,8 +49,21 @@ func _set_texture(value: Texture2D) -> void:
 		_sprite.texture = texture
 
 
-func _set_layer(value: int) -> void:
+func _set_pos(value: Vector2i) -> void:
+	var old_pos := pos
+	pos = value
+	
 	if map != null:
-		map._entity_map.erase(Vector3i(pos.x, pos.y, layer))
-		layer = value
+		map.move_entity(self, old_pos)
+		
+		if pos != old_pos:
+			history_transaction.emit(self, "pos", old_pos)
+
+
+func _set_layer(value: int) -> void:
+	var old_layer := layer
+	layer = value
+	
+	if map != null:
+		map._entity_map.erase(Vector3i(pos.x, pos.y, old_layer))
 		map._entity_map[Vector3i(pos.x, pos.y, layer)] = self

@@ -13,6 +13,7 @@ var _selectable_entities: Array[Entity] = []
 var _selected_entity: Entity
 var _history := []
 var _history_transaction := []
+var _history_undo_process := false
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
 @onready var _entities_container := $"Entities" as Node2D
@@ -44,9 +45,9 @@ func _input(event: InputEvent) -> void:
 	
 	if action_dir != Vector2i.ZERO and _selected_entity != null:
 		_selected_entity.process_action(action_dir)
-		if _history_transaction.size() == 0:
+		if _history_transaction.size() > 0:
 			_process_logic()
-		_history_transaction_save()
+			_history_transaction_save()
 
 
 func _convert_entities() -> void:
@@ -63,9 +64,11 @@ func _convert_entities() -> void:
 			_block_layer.erase_cell(cell_pos)
 
 
-func _history_transaction_add(coords: Vector3i,
-		entity: Entity = null, old_cell := TILE_EMPTY) -> void:
-	var step := [coords, entity, old_cell]
+func _history_transaction_add(entity: Entity, attribute: String, value: Variant) -> void:
+	if _history_undo_process:
+		return
+	
+	var step := [entity, attribute, value]
 	_history_transaction.append(step)
 
 
@@ -73,17 +76,16 @@ func _history_transaction_undo(transaction := []) -> void:
 	if transaction.size() == 0:
 		transaction = _history_transaction
 	
+	_history_undo_process = true
 	for i in range(transaction.size() - 1, -1, -1):
-		var step := transaction[i] as Array
-		var coords := step[0] as Vector3i
-		var pos := Vector2i(coords.x, coords.y)
-		var layer := coords.z
-		var entity := step[1] as Entity
-		var old_cell := step[2] as Vector2i
+		var step: Array = transaction[i]
+		var entity: Entity = step[0]
+		var attribute: String = step[1]
+		var value: Variant = step[2]
 		
-		if entity != null:
-			move_cell(entity.pos, pos)
+		entity.set(attribute, value)
 	
+	_history_undo_process = false
 	_history_transaction = []
 
 
@@ -167,14 +169,20 @@ func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
 		_selectable_entities.append(entity)
 	
 	entity.map = self
+	entity.history_transaction.connect(_history_transaction_add)
 	
 	if _selected_entity == null:
 		select_next_entity()
 
 
 func remove_entity(entity: Entity) -> void:
+	if entity.process:
+		_process_entities.erase(entity)
+		
 	if entity.selectable:
 		_selectable_entities.erase(entity)
+	
+	entity.history_transaction.disconnect(_history_transaction_add)
 	
 	_entity_map.erase(Vector3i(entity.pos.x, entity.pos.y, entity.layer))
 	entity.queue_free()
@@ -183,8 +191,14 @@ func remove_entity(entity: Entity) -> void:
 		select_next_entity()
 
 
-func move_entity(entity: Entity, dir: Vector2i) -> void:
-	cascade_push(entity.pos, dir)
+func move_entity(entity: Entity, old_pos: Vector2i) -> void:
+	entity.position = _block_layer.map_to_local(entity.pos)
+	
+	if _entity_map.erase(Vector3i(old_pos.x, old_pos.y, 0)):
+		_entity_map[Vector3i(entity.pos.x, entity.pos.y, 0)] = entity
+	
+	if entity == _selected_entity:
+		update_hints()
 
 
 func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
@@ -207,33 +221,7 @@ func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
 	
 	# Action: Target is empty
 	if target_cell == TILE_EMPTY and target_entity == null:
-		move_cell(current_pos, target_pos)
-
-
-func move_cell(current_pos: Vector2i, target_pos: Vector2i) -> void:
-	var current_entity: Entity = _entity_map.get(Vector3i(current_pos.x, current_pos.y, 0))
-	
-	# Move entity
-	if current_entity != null:
 		current_entity.pos = target_pos
-		current_entity.position = _block_layer.map_to_local(target_pos)
-		
-		_entity_map.erase(Vector3i(current_pos.x, current_pos.y, 0))
-		_entity_map[Vector3i(target_pos.x, target_pos.y, 0)] = current_entity
-		
-		if current_entity == _selected_entity:
-			update_hints()
-		
-		_history_transaction_add(Vector3i(current_pos.x, current_pos.y, 0), current_entity)
-		return
-	
-	# Otherwise move tile
-	var current_cell := get_cell(current_pos)
-	if current_cell != TILE_EMPTY:
-		set_cell(current_pos, TILE_EMPTY)
-		set_cell(target_pos, current_cell)
-		_history_transaction_add(Vector3i(current_pos.x, current_pos.y, 0), null, current_cell)
-		return
 
 
 func get_cell(pos: Vector2i) -> Vector2i:

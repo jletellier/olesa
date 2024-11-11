@@ -2,7 +2,7 @@ extends "res://entities/entity.gd"
 
 
 func process_action(dir: Vector2i) -> void:
-	map.move_entity(self, dir)
+	map.cascade_push(pos, dir)
 
 
 func collide_with(target_entity: Entity) -> void:
