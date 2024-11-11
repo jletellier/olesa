@@ -19,7 +19,7 @@ func process_logic() -> void:
 	var neighbors := map.get_moore_neighbors(pos)
 	var found_tool := false
 	for neighbor in neighbors:
-		if neighbor is EntityDB.Jo:
+		if neighbor is EntityDB.Jo or neighbor is EntityDB.EntityContainer:
 			if neighbor.has_tool:
 				found_tool = true
 				break

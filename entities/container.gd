@@ -4,7 +4,7 @@ extends "res://entities/entity.gd"
 @export var texture_empty : Texture2D
 @export var texture_tool : Texture2D
 
-var has_tool := true:
+var has_tool := false:
 	set = _set_has_tool
 
 

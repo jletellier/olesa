@@ -44,6 +44,8 @@ func _input(event: InputEvent) -> void:
 	
 	if action_dir != Vector2i.ZERO and _selected_entity != null:
 		_selected_entity.process_action(action_dir)
+		if _history_transaction.size() == 0:
+			_process_logic()
 		_history_transaction_save()
 
 
@@ -52,8 +54,10 @@ func _convert_entities() -> void:
 	for cell_pos in cell_positions:
 		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
 		if cell in EntityDB.SceneMap:
-			var entity_scene := EntityDB.SceneMap[cell] as PackedScene
-			add_entity(cell_pos, entity_scene)
+			var scene_item := EntityDB.SceneMap[cell] as Dictionary
+			var entity_scene := scene_item.scene as PackedScene
+			var entity_data := scene_item.get("data", {}) as Dictionary
+			add_entity(cell_pos, entity_scene, entity_data)
 			
 			# Remove tile, since it's no longer needed
 			_block_layer.erase_cell(cell_pos)
@@ -145,10 +149,13 @@ func select_next_entity() -> void:
 	update_hints(true)
 
 
-func add_entity(pos: Vector2i, scene: PackedScene) -> void:
+func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
 	var entity := scene.instantiate() as Entity
 	entity.position = _block_layer.map_to_local(pos)
 	entity.pos = pos
+	for attribute in data:
+		if attribute in entity:
+			entity.set(attribute, data[attribute])
 	_entities_container.add_child(entity)
 	
 	_entity_map[Vector3i(pos.x, pos.y, entity.layer)] = entity
@@ -178,7 +185,6 @@ func remove_entity(entity: Entity) -> void:
 
 func move_entity(entity: Entity, dir: Vector2i) -> void:
 	cascade_push(entity.pos, dir)
-	_process_logic()
 
 
 func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
