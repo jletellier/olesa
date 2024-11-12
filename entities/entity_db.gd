@@ -1,13 +1,15 @@
 extends Object
 
 
-const Jo := preload("res://entities/jo.gd")
 const Lawa := preload("res://entities/lawa.gd")
+const Jo := preload("res://entities/jo.gd")
+const Pali := preload("res://entities/pali.gd")
 const EntityObject := preload("res://entities/object.gd")
 const Surface := preload("res://entities/surface.gd")
 const WallCracked := preload("res://entities/wall_cracked.gd")
 const Door := preload("res://entities/door.gd")
 const EntityContainer := preload("res://entities/container.gd")
+const Mountain := preload("res://entities/mountain.gd")
 
 const SceneMap := {
 	Vector2i(1, 0): {
@@ -15,6 +17,9 @@ const SceneMap := {
 	},
 	Vector2i(0, 1): {
 		"scene": preload("res://entities/jo.tscn"),
+	},
+	Vector2i(1, 1): {
+		"scene": preload("res://entities/pali.tscn"),
 	},
 	Vector2i(2, 0): {
 		"scene": preload("res://entities/object.tscn"),
@@ -34,5 +39,8 @@ const SceneMap := {
 	},
 	Vector2i(7, 2): {
 		"scene": preload("res://entities/container.tscn"),
+	},
+	Vector2i(5, 1): {
+		"scene": preload("res://entities/mountain.tscn"),
 	},
 }

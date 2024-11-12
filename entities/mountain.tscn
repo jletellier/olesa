@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://8hdqxg6ftswt"]
+
+[ext_resource type="Script" path="res://entities/mountain.gd" id="1_5dbeh"]
+[ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_54xt5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_02wl4"]
+atlas = ExtResource("2_54xt5")
+region = Rect2(80, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a1mim"]
+atlas = ExtResource("2_54xt5")
+region = Rect2(32, 0, 16, 16)
+
+[node name="Mountain" type="Node2D"]
+script = ExtResource("1_5dbeh")
+texture = SubResource("AtlasTexture_02wl4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_a1mim")

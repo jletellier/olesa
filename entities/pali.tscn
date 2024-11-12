@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://bc3sy2adgwdsb"]
+
+[ext_resource type="Script" path="res://entities/pali.gd" id="1_i3vwb"]
+[ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_gtttm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hedm7"]
+atlas = ExtResource("2_gtttm")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
+atlas = ExtResource("2_gtttm")
+region = Rect2(0, 16, 16, 16)
+
+[node name="Pali" type="Node2D"]
+script = ExtResource("1_i3vwb")
+texture = SubResource("AtlasTexture_hedm7")
+selectable = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_j2147")
