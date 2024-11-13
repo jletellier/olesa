@@ -2,7 +2,6 @@ extends Node2D
 
 
 const Entity := preload("res://entities/entity.gd")
-const EntitySelect := preload("res://ui/hints/entity_select.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
@@ -17,7 +16,6 @@ var _history_undo_process := false
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
 @onready var _entities_container := $"Entities" as Node2D
-@onready var _hint_entity_select := $Hints/EntitySelect as EntitySelect
 
 
 func _ready() -> void:
@@ -122,23 +120,14 @@ func get_moore_neighbors(pos: Vector2i, layer := 0) -> Array[Entity]:
 	return neighbors
 
 
-func update_hints(animate := false) -> void:
-	if _selected_entity == null:
-		_hint_entity_select.visible = false
-		return
-	
-	_hint_entity_select.visible = true
-	_hint_entity_select.position = _block_layer.map_to_local(_selected_entity.pos)
-	if animate:
-		_hint_entity_select.animate()
-
-
 func select_next_entity() -> void:
 	if _selectable_entities.is_empty():
 		return
 	
 	var current_idx := -1
 	if _selected_entity != null:
+		_selected_entity.selected = false
+		
 		for i in range(_selectable_entities.size()):
 			var entity := _selectable_entities[i]
 			if entity.pos == _selected_entity.pos:
@@ -147,8 +136,7 @@ func select_next_entity() -> void:
 	
 	var next_idx := (current_idx + 1) % _selectable_entities.size()
 	_selected_entity = _selectable_entities[next_idx]
-	
-	update_hints(true)
+	_selected_entity.selected = true
 
 
 func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
@@ -197,8 +185,8 @@ func move_entity(entity: Entity, old_pos: Vector2i) -> void:
 	if _entity_map.erase(Vector3i(old_pos.x, old_pos.y, 0)):
 		_entity_map[Vector3i(entity.pos.x, entity.pos.y, 0)] = entity
 	
-	if entity == _selected_entity:
-		update_hints()
+	#if entity == _selected_entity:
+		#update_hints()
 
 
 func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:

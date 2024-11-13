@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=6 format=3 uid="uid://bsvas1mydwd7w"]
 
 [ext_resource type="Script" path="res://entities/jo.gd" id="1_sv2g8"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
+[ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_ea5xr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8u30k"]
 atlas = ExtResource("2_kuyye")
@@ -18,3 +19,6 @@ selectable = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
+
+[node name="HintSelect" parent="." instance=ExtResource("3_ea5xr")]
+visible = false

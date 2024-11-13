@@ -1,0 +1,55 @@
+[gd_scene load_steps=9 format=3 uid="uid://bus45ea8g5esx"]
+
+[ext_resource type="Script" path="res://ui/hints/entity_target.gd" id="1_13vpn"]
+[ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="2_72xp2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7k0p7"]
+atlas = ExtResource("2_72xp2")
+region = Rect2(0, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_owk52"]
+atlas = ExtResource("2_72xp2")
+region = Rect2(48, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_imxjd"]
+atlas = ExtResource("2_72xp2")
+region = Rect2(96, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nml1"]
+atlas = ExtResource("2_72xp2")
+region = Rect2(144, 48, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i8as0"]
+atlas = ExtResource("2_72xp2")
+region = Rect2(192, 48, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dq3qi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7k0p7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_owk52")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_imxjd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7nml1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i8as0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="EntityTarget" type="Node2D"]
+script = ExtResource("1_13vpn")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_dq3qi")
+frame = 1
+frame_progress = 0.70412

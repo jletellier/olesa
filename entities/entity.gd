@@ -4,6 +4,7 @@ extends Node2D
 const Map := preload("res://maps/map.gd")
 const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
+const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
 signal history_transaction(entity: Entity, attribute: String, value: Variant)
 
@@ -19,9 +20,13 @@ var pos := Vector2i.ZERO:
 var layer := 0:
 	set = _set_layer
 
+var selected := false:
+	set = _set_selected
+
 var map: Map
 
 @onready var _sprite := $"Sprite2D" as Sprite2D
+@onready var _hint_select := $"HintSelect" as EntitySelect
 
 
 func process_logic() -> void:
@@ -67,3 +72,12 @@ func _set_layer(value: int) -> void:
 	if map != null:
 		map._entity_map.erase(Vector3i(pos.x, pos.y, old_layer))
 		map._entity_map[Vector3i(pos.x, pos.y, layer)] = self
+
+
+func _set_selected(value: bool) -> void:
+	selected = value
+	
+	if _hint_select != null:
+		_hint_select.visible = selected
+		if selected:
+			_hint_select.animate()
