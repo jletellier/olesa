@@ -7,9 +7,6 @@ const EntityDB := preload("res://entities/entity_db.gd")
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
 signal history_transaction(entity: Entity, attribute: String, value: Variant)
-
-@export var texture: Texture2D:
-	set = _set_texture
 		
 @export var selectable := false
 @export var process := false
@@ -25,7 +22,9 @@ var selected := false:
 
 var map: Map
 
+@warning_ignore("unused_private_class_variable")
 @onready var _sprite := $"Sprite2D" as Sprite2D
+
 @onready var _hint_select := $"HintSelect" as EntitySelect
 
 
@@ -46,12 +45,6 @@ func collide_with(target_entity: Entity) -> void:
 @warning_ignore("unused_parameter")
 func can_push(target_entity: Entity) -> bool:
 	return false
-
-
-func _set_texture(value: Texture2D) -> void:
-	texture = value
-	if _sprite != null:
-		_sprite.texture = texture
 
 
 func _set_pos(value: Vector2i) -> void:

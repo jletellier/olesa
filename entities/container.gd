@@ -14,4 +14,5 @@ func _ready() -> void:
 
 func _set_has_tool(value: bool) -> void:
 	has_tool = value
-	texture = texture_tool if has_tool else texture_empty
+	if _sprite != null:
+		_sprite.texture = texture_tool if has_tool else texture_empty

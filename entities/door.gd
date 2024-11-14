@@ -30,4 +30,5 @@ func process_logic() -> void:
 func _set_is_open(value: bool) -> void:
 	is_open = value
 	layer = 1 if is_open else 0
-	texture = texture_hint if is_open else texture_door
+	if _sprite != null:
+		_sprite.texture = texture_hint if is_open else texture_door

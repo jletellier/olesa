@@ -12,8 +12,7 @@ var current_target: Entity:
 func process_action(dir: Vector2i) -> void:
 	var target_pos := pos + dir
 	var neighbor: Entity = map._entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
-	if neighbor is EntityDB.Mountain:
-		current_target = neighbor
+	current_target = neighbor
 
 
 func _update_hints() -> void:
@@ -22,7 +21,13 @@ func _update_hints() -> void:
 
 
 func _set_current_target(value: Entity) -> void:
+	if current_target is EntityDB.Mountain and current_target != value:
+		current_target.has_worker = false
+	
 	current_target = value
+	
+	if current_target is EntityDB.Mountain:
+		current_target.has_worker = true
 	
 	if _hint_target != null:
 		_update_hints()
