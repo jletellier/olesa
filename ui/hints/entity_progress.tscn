@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://c1gf5gur01aib"]
+
+[ext_resource type="Script" path="res://ui/hints/entity_target.gd" id="1_kwa7s"]
+[ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="2_wl2s4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1u14n"]
+atlas = ExtResource("2_wl2s4")
+region = Rect2(0, 96, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tqcc7"]
+atlas = ExtResource("2_wl2s4")
+region = Rect2(192, 96, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dq3qi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1u14n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tqcc7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[node name="EntityProgress" type="Node2D"]
+script = ExtResource("1_kwa7s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_dq3qi")
+frame_progress = 0.657119
