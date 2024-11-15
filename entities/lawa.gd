@@ -1,8 +1,12 @@
 extends "res://entities/entity.gd"
 
 
+@onready var _audio_player_movement := $"AudioPlayerMovement" as AudioStreamPlayer
+
+
 func process_action(dir: Vector2i) -> void:
 	map.cascade_push(pos, dir)
+	_audio_player_movement.play()
 
 
 func collide_with(target_entity: Entity) -> void:

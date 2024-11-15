@@ -6,14 +6,19 @@ This game is currently being developed as part of [Game Off 2024](https://itch.i
 
 TODO: Publish the game site here once it's ready.
 
-## Attributions
+## License/Attributions
 
 Code is licensed under MIT. Artwork is licensed under CC BY 4.0 <img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt="">, unless otherwise stated below.
 
 - Developed in [Godot Engine](https://github.com/godotengine/godot)
+- Sprites created with [Aseprite](https://dacap.itch.io/aseprite)
 
 <details>
   <summary>Spoiler warning 🤫</summary>
 
   - Using sitelen pona by Sonja Lang, the creator of [toki pona](https://tokipona.org/)
 </details>
+
+### Third-Party Assets
+
+- [UI sound effects](https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks) by [Kenney Vleugels](https://www.kenney.nl) licensed CC0
