@@ -22,3 +22,4 @@ Code is licensed under MIT. Artwork is licensed under CC BY 4.0 <img style="heig
 ### Third-Party Assets
 
 - [UI sound effects](https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks) by [Kenney Vleugels](https://www.kenney.nl) licensed CC0
+- [Space ambient](https://opengameart.org/content/space-ambient) by Osmic licensed CC-BY 3.0

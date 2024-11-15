@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=4 uid="uid://da6m7u64kxig3"]
+[gd_scene load_steps=4 format=4 uid="uid://da6m7u64kxig3"]
 
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="1_lv4lc"]
 [ext_resource type="Script" path="res://maps/map.gd" id="1_om2nt"]
+[ext_resource type="AudioStream" uid="uid://b8lad7l7gxiv7" path="res://assets/music/ville_seppanen-1.ogg" id="3_4qobx"]
 
 [node name="MapA001" type="Node2D"]
 script = ExtResource("1_om2nt")
@@ -11,3 +12,8 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAA
 tile_set = ExtResource("1_lv4lc")
 
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_4qobx")
+autoplay = true
+parameters/looping = true
