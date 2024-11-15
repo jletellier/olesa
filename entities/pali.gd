@@ -43,3 +43,4 @@ func _set_selected(value: bool) -> void:
 		_update_hints()
 		if selected:
 			_hint_select.animate()
+			_hint_target.animate()
