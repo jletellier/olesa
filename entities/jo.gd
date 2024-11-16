@@ -3,6 +3,8 @@ extends "res://entities/entity.gd"
 
 var has_tool := false
 
+@onready var _animated_carrying := $"AnimatedCarrying" as AnimatedSprite2D
+
 
 func process_action(dir: Vector2i) -> void:
 	var target_pos := pos + dir
@@ -11,3 +13,9 @@ func process_action(dir: Vector2i) -> void:
 		if neighbor.has_tool != has_tool:
 			neighbor.has_tool = !neighbor.has_tool
 			has_tool = !has_tool
+			
+			_animated_carrying.frame = 0
+			if has_tool:
+				_animated_carrying.play()
+			else:
+				_animated_carrying.play_backwards()
