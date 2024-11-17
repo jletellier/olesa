@@ -148,10 +148,13 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xwkxa")
+}, {
+"duration": 1.0,
+"texture": null
 }],
 "loop": false,
 "name": &"step_3",
-"speed": 10.0
+"speed": 12.0
 }]
 
 [node name="EntityProgress" type="Node2D"]
@@ -159,4 +162,3 @@ script = ExtResource("1_bxgkq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_dq3qi")
-animation = &"step_1"

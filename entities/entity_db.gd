@@ -10,6 +10,7 @@ const WallCracked := preload("res://entities/wall_cracked.gd")
 const Door := preload("res://entities/door.gd")
 const EntityContainer := preload("res://entities/container.gd")
 const Mountain := preload("res://entities/mountain.gd")
+const Construction := preload("res://entities/construction.gd")
 
 const SceneMap := {
 	Vector2i(1, 0): {
@@ -42,5 +43,8 @@ const SceneMap := {
 	},
 	Vector2i(5, 1): {
 		"scene": preload("res://entities/mountain.tscn"),
+	},
+	Vector2i(0, 2): {
+		"scene": preload("res://entities/construction.tscn"),
 	},
 }

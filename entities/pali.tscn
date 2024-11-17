@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://bus45ea8g5esx" path="res://ui/hints/entity_target.tscn" id="3_e3fh8"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_olmo4"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_g23ok"]
 atlas = ExtResource("2_gtttm")
-region = Rect2(0, 16, 16, 16)
+region = Rect2(16, 16, 16, 16)
 
 [node name="Pali" type="Node2D"]
 script = ExtResource("1_i3vwb")
@@ -15,7 +15,7 @@ selectable = true
 process = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = SubResource("AtlasTexture_j2147")
+texture = SubResource("AtlasTexture_g23ok")
 
 [node name="HintSelect" parent="." instance=ExtResource("3_olmo4")]
 visible = false

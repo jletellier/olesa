@@ -16,4 +16,5 @@ func collide_with(target_entity: Entity) -> void:
 
 func can_push(target_entity: Entity) -> bool:
 	return (target_entity is EntityDB.Jo or \
+			target_entity is EntityDB.Pali or \
 			target_entity is EntityDB.EntityObject)

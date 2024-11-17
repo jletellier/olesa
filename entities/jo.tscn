@@ -1,59 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=6 format=3 uid="uid://bsvas1mydwd7w"]
 
 [ext_resource type="Script" path="res://entities/jo.gd" id="1_sv2g8"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
+[ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="3_2getj"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_ea5xr"]
-[ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="3_jfugg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_kuyye")
 region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_roc6b"]
-atlas = ExtResource("3_jfugg")
-region = Rect2(0, 112, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dlk4p"]
-atlas = ExtResource("3_jfugg")
-region = Rect2(48, 112, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ksb1q"]
-atlas = ExtResource("3_jfugg")
-region = Rect2(96, 112, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_acpu0"]
-atlas = ExtResource("3_jfugg")
-region = Rect2(144, 112, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_r5sa5"]
-atlas = ExtResource("3_jfugg")
-region = Rect2(192, 112, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_kc4ke"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": null
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_roc6b")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_dlk4p")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ksb1q")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_acpu0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_r5sa5")
-}],
-"loop": false,
-"name": &"default",
-"speed": 12.0
-}]
 
 [node name="Jo" type="Node2D"]
 script = ExtResource("1_sv2g8")
@@ -62,8 +16,7 @@ selectable = true
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
 
-[node name="AnimatedCarrying" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_kc4ke")
+[node name="HintPossess" parent="." instance=ExtResource("3_2getj")]
 
 [node name="HintSelect" parent="." instance=ExtResource("3_ea5xr")]
 visible = false

@@ -21,12 +21,13 @@ func _update_hints() -> void:
 
 
 func _set_current_target(value: Entity) -> void:
-	if current_target is EntityDB.Mountain and current_target != value:
+	if (current_target is EntityDB.Mountain or current_target is EntityDB.Construction) and \
+			current_target != value:
 		current_target.has_worker = false
 	
 	current_target = value
 	
-	if current_target is EntityDB.Mountain:
+	if (current_target is EntityDB.Mountain or current_target is EntityDB.Construction):
 		current_target.has_worker = true
 	
 	if _hint_target != null:

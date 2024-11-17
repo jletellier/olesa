@@ -19,14 +19,14 @@ var has_item := false:
 
 
 func process_logic() -> void:
-	if has_worker and !has_item:
+	if has_worker and has_item:
 		processing_step += 1
 		
 		_hint_progress.progress = processing_step
 		
 		if processing_step >= processing_count:
+			print("finished")
 			processing_step = 0
-			has_item = true
 
 
 func _set_has_worker(value: bool) -> void:
