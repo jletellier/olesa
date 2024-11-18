@@ -3,14 +3,11 @@
 [ext_resource type="Script" path="res://entities/surface.gd" id="1_sqos7"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_mhrcu"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_4abra"]
+[ext_resource type="AudioStream" uid="uid://ktg4akw4o6y7" path="res://assets/sounds/anchor_action.wav" id="4_aso7b"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3tbfh"]
 atlas = ExtResource("2_mhrcu")
 region = Rect2(64, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o4hi3"]
-atlas = ExtResource("2_mhrcu")
-region = Rect2(48, 0, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_mhrcu")
@@ -19,10 +16,12 @@ region = Rect2(48, 0, 16, 16)
 [node name="Surface" type="Node2D"]
 script = ExtResource("1_sqos7")
 texture_object = SubResource("AtlasTexture_3tbfh")
-texture = SubResource("AtlasTexture_o4hi3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
 
 [node name="HintSelect" parent="." instance=ExtResource("3_4abra")]
 visible = false
+
+[node name="AudioFinish" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_aso7b")

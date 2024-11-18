@@ -7,12 +7,19 @@ var current_target: Entity:
 	set = _set_current_target
 
 @onready var _hint_target := $"HintTarget" as EntityTarget
+@onready var _audio_target_success := $"AudioTargetSuccess" as AudioStreamPlayer
+@onready var _audio_target_failure := $"AudioTargetFailure" as AudioStreamPlayer
 
 
 func process_action(dir: Vector2i) -> void:
 	var target_pos := pos + dir
 	var neighbor: Entity = map._entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
 	current_target = neighbor
+	
+	if current_target != null:
+		_audio_target_success.play()
+	else:
+		_audio_target_failure.play()
 
 
 func _update_hints() -> void:

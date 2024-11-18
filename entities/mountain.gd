@@ -16,6 +16,7 @@ var has_item := false:
 
 @onready var _hint_progress := $"HintProgress" as EntityProgress
 @onready var _hint_possess := $"HintPossess" as EntityPossess
+@onready var _audio_finish := $"AudioFinish" as AudioStreamPlayer
 
 
 func process_logic() -> void:
@@ -27,6 +28,7 @@ func process_logic() -> void:
 		if processing_step >= processing_count:
 			processing_step = 0
 			has_item = true
+			_audio_finish.play()
 
 
 func _set_has_worker(value: bool) -> void:

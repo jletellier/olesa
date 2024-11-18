@@ -22,4 +22,7 @@ Code is licensed under MIT. Artwork is licensed under CC BY 4.0 <img style="heig
 ### Third-Party Assets
 
 - [UI sound effects](https://opengameart.org/content/51-ui-sound-effects-buttons-switches-and-clicks) by [Kenney Vleugels](https://www.kenney.nl) licensed CC0
+- [UI Sound Effects Library](https://opengameart.org/content/ui-sound-effects-library) by [Little Robot Sound Factory](https://www.littlerobotsoundfactory.com) licensed CC-BY 3.0
+- [Atmospheric Interaction Sound Pack](https://opengameart.org/content/atmospheric-interaction-sound-pack) by [legoluft](https://www.legoluft.de) licensed CC0
+- [The Essential Retro Video Game Sound Effects Collection](https://opengameart.org/content/512-sound-effects-8-bit-style) by Juhani Junkala licensed CC0
 - [Space ambient](https://opengameart.org/content/space-ambient) by Osmic licensed CC-BY 3.0

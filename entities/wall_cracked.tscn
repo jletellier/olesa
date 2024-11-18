@@ -3,10 +3,7 @@
 [ext_resource type="Script" path="res://entities/wall_cracked.gd" id="1_lyk4b"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_dxdso"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_u7yma"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_bmvxb"]
-atlas = ExtResource("2_dxdso")
-region = Rect2(80, 0, 16, 16)
+[ext_resource type="AudioStream" uid="uid://cg0tmlxnajsvp" path="res://assets/sounds/sfx_sounds_impact11.wav" id="4_ujcjs"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_dxdso")
@@ -14,10 +11,12 @@ region = Rect2(80, 0, 16, 16)
 
 [node name="WallCracked" type="Node2D"]
 script = ExtResource("1_lyk4b")
-texture = SubResource("AtlasTexture_bmvxb")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
 
 [node name="HintSelect" parent="." instance=ExtResource("3_u7yma")]
 visible = false
+
+[node name="AudioDestroy" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_ujcjs")

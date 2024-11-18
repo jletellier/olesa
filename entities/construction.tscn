@@ -1,10 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cj256ib43uol0"]
+[gd_scene load_steps=8 format=3 uid="uid://cj256ib43uol0"]
 
 [ext_resource type="Script" path="res://entities/construction.gd" id="1_lesij"]
 [ext_resource type="PackedScene" uid="uid://c1gf5gur01aib" path="res://ui/hints/entity_progress.tscn" id="2_xgtwf"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="3_e376k"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="4_mbcbg"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="4_u80mg"]
+[ext_resource type="AudioStream" uid="uid://xpfba2vcldk2" path="res://assets/sounds/unlink.wav" id="6_6hj7c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02wl4"]
 atlas = ExtResource("3_e376k")
@@ -21,6 +22,10 @@ visible = false
 texture = SubResource("AtlasTexture_02wl4")
 
 [node name="HintPossess" parent="." instance=ExtResource("4_u80mg")]
+position = Vector2(0, -8)
 
 [node name="HintSelect" parent="." instance=ExtResource("4_mbcbg")]
 visible = false
+
+[node name="AudioFinish" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_6hj7c")
