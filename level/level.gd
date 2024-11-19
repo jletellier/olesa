@@ -3,6 +3,7 @@ extends Node2D
 
 const Map := preload("res://maps/map.gd")
 
+const UI_OFFSET := Vector2i(0, 0)
 const INPUT_ECHO_DELTA := 0.27
 const INPUT_ACTIONS := [
 	"game_undo",
@@ -97,13 +98,11 @@ func _unload_map() -> void:
 	pass
 
 
-func _on_size_changed() -> void:
-	var ui_offset := Vector2i(-56, 0)
-	
+func _on_size_changed() -> void:	
 	# Center camera on main tile map layer
 	var map_size := _map.get_map_size()
 	var tile_size := _map.get_tile_size()
-	var pixel_size := Vector2i(map_size * tile_size) - ui_offset
+	var pixel_size := Vector2i(map_size * tile_size) - UI_OFFSET
 	_camera.position = pixel_size / 2
 	
 	# Change window scale if necessary
