@@ -21,31 +21,18 @@ var _history_undo_process := false
 func _ready() -> void:
 	_convert_entities()
 	_process_logic()
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_focus_next"):
-		select_next_entity()
 	
-	if event.is_action_pressed("game_undo"):
-		history_undo()
-	
-	var action_dir := Vector2i.ZERO
-	
-	if event.is_action_pressed("game_right"):
-		action_dir = Vector2i.RIGHT
-	elif event.is_action_pressed("game_down"):
-		action_dir = Vector2i.DOWN
-	elif event.is_action_pressed("game_left"):
-		action_dir = Vector2i.LEFT
-	elif event.is_action_pressed("game_up"):
-		action_dir = Vector2i.UP
-	
-	if action_dir != Vector2i.ZERO and _selected_entity != null:
-		_selected_entity.process_action(action_dir)
-		if _history_transaction.size() > 0:
-			_process_logic()
-			_history_transaction_save()
+	# Workaround, only for editing purposes; allows to run a map on its own
+	if OS.has_feature("editor") and get_tree().root.get_child(0) == self:
+		(func():
+			var LevelScene := load("res://level/level.tscn")
+			var level_node := LevelScene.instantiate() as Node
+			level_node.remove_child(level_node.get_node("Map"))
+			var root_node := get_tree().root
+			root_node.remove_child(self)
+			level_node.add_child(self)
+			root_node.add_child(level_node)
+		).call_deferred()
 
 
 func _convert_entities() -> void:
@@ -98,6 +85,14 @@ func _history_transaction_save() -> void:
 func _process_logic() -> void:
 	for entity in _process_entities:
 		entity.process_logic()
+
+
+func process_action(dir: Vector2i) -> void:
+	if dir != Vector2i.ZERO and _selected_entity != null:
+		_selected_entity.process_action(dir)
+		if _history_transaction.size() > 0:
+			_process_logic()
+			_history_transaction_save()
 
 
 func history_undo() -> void:
@@ -218,3 +213,11 @@ func get_cell(pos: Vector2i) -> Vector2i:
 
 func set_cell(pos: Vector2i, cell: Vector2i) -> void:
 	_block_layer.set_cell(pos, 0, cell)
+
+
+func get_map_size() -> Vector2i:
+	return _block_layer.get_used_rect().size
+
+
+func get_tile_size() -> Vector2i:
+	return _block_layer.tile_set.tile_size
