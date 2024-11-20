@@ -22,9 +22,9 @@ func process_action(dir: Vector2i) -> void:
 		_audio_target_failure.play()
 
 
-func _update_hints() -> void:
-	_hint_select.visible = selected
-	_hint_target.visible = (selected and current_target != null)
+#func _update_hints() -> void:
+	#_hint_select.visible = selected
+	#_hint_target.visible = (selected and current_target != null)
 
 
 func _set_current_target(value: Entity) -> void:
@@ -38,17 +38,17 @@ func _set_current_target(value: Entity) -> void:
 		current_target.has_worker = true
 	
 	if _hint_target != null:
-		_update_hints()
+		#_update_hints()
 		if current_target != null:
 			_hint_target.global_position = current_target.global_position
 			_hint_target.animate()
 
 
-func _set_selected(value: bool) -> void:
-	selected = value
-	
-	if _hint_select != null:
-		_update_hints()
-		if selected:
-			_hint_select.animate()
-			_hint_target.animate()
+#func _set_selected(value: bool) -> void:
+	#selected = value
+	#
+	#if _hint_select != null:
+		#_update_hints()
+		#if selected:
+			#_hint_select.animate()
+			#_hint_target.animate()

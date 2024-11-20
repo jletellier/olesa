@@ -1,20 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://bc3sy2adgwdsb"]
+[gd_scene load_steps=9 format=3 uid="uid://bc3sy2adgwdsb"]
 
-[ext_resource type="Script" path="res://entities/pali.gd" id="1_i3vwb"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_mqubp"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_gtttm"]
 [ext_resource type="PackedScene" uid="uid://bus45ea8g5esx" path="res://ui/hints/entity_target.tscn" id="3_e3fh8"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_olmo4"]
 [ext_resource type="AudioStream" uid="uid://7gxqe42oqttb" path="res://assets/sounds/Click_Soft_00.wav" id="5_wyotn"]
 [ext_resource type="AudioStream" uid="uid://vnx7uur2wrn0" path="res://assets/sounds/Click_Soft_01.wav" id="6_ti3qy"]
+[ext_resource type="Script" path="res://entities/selectable_system.gd" id="7_tr5hj"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g23ok"]
 atlas = ExtResource("2_gtttm")
 region = Rect2(16, 16, 16, 16)
 
 [node name="Pali" type="Node2D"]
-script = ExtResource("1_i3vwb")
-selectable = true
-process = true
+script = ExtResource("1_mqubp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_g23ok")
@@ -30,3 +29,6 @@ stream = ExtResource("5_wyotn")
 
 [node name="AudioTargetFailure" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ti3qy")
+
+[node name="SelectableSystem" type="Node" parent="."]
+script = ExtResource("7_tr5hj")

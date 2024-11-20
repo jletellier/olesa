@@ -73,7 +73,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
-		_map.select_next_entity()
+		_map.select_next()
 
 
 func _change_map(id: String) -> void:

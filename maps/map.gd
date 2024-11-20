@@ -3,13 +3,13 @@ extends Node2D
 
 const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
+const SelectableSystem := preload("res://entities/selectable_system.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
 
 var _entity_map := {} # Typing: Dictionary[Vector3i, Entity]
-var _process_entities: Array[Entity] = []
-var _selectable_entities: Array[Entity] = []
-var _selected_entity: Entity
+var _selectable_systems: Array[SelectableSystem] = []
+var _selected_system: SelectableSystem
 var _history := []
 var _history_transaction := []
 var _history_undo_process := false
@@ -20,7 +20,7 @@ var _history_undo_process := false
 
 func _ready() -> void:
 	_convert_entities()
-	_process_logic()
+	_process_tick()
 	
 	# Workaround, only for editing purposes; allows to run a map on its own
 	if OS.has_feature("editor") and get_tree().root.get_child(0) == self:
@@ -82,16 +82,17 @@ func _history_transaction_save() -> void:
 	_history_transaction = []
 
 
-func _process_logic() -> void:
-	for entity in _process_entities:
-		entity.process_logic()
+func _process_tick() -> void:
+	for entity in _entity_map.values():
+		if entity is Entity:
+			entity.tick()
 
 
 func process_action(dir: Vector2i) -> void:
-	if dir != Vector2i.ZERO and _selected_entity != null:
-		_selected_entity.process_action(dir)
+	if dir != Vector2i.ZERO and _selected_system != null:
+		_selected_system.entity.action(dir)
 		if _history_transaction.size() > 0:
-			_process_logic()
+			_process_tick()
 			_history_transaction_save()
 
 
@@ -115,23 +116,23 @@ func get_moore_neighbors(pos: Vector2i, layer := 0) -> Array[Entity]:
 	return neighbors
 
 
-func select_next_entity() -> void:
-	if _selectable_entities.is_empty():
+func select_next() -> void:
+	if _selectable_systems.is_empty():
 		return
 	
 	var current_idx := -1
-	if _selected_entity != null:
-		_selected_entity.selected = false
+	if _selected_system != null:
+		_selected_system.selected = false
 		
-		for i in range(_selectable_entities.size()):
-			var entity := _selectable_entities[i]
-			if entity.pos == _selected_entity.pos:
+		for i in range(_selectable_systems.size()):
+			var entity := _selectable_systems[i].entity
+			if entity.pos == _selected_system.entity.pos:
 				current_idx = i
 				break
 	
-	var next_idx := (current_idx + 1) % _selectable_entities.size()
-	_selected_entity = _selectable_entities[next_idx]
-	_selected_entity.selected = true
+	var next_idx := (current_idx + 1) % _selectable_systems.size()
+	_selected_system = _selectable_systems[next_idx]
+	_selected_system.selected = true
 
 
 func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
@@ -145,33 +146,29 @@ func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
 	
 	_entity_map[Vector3i(pos.x, pos.y, entity.layer)] = entity
 	
-	if entity.process:
-		_process_entities.append(entity)
-	
-	if entity.selectable:
-		_selectable_entities.append(entity)
+	var selectable_system := entity.get_system("SelectableSystem")
+	if selectable_system is SelectableSystem:
+		_selectable_systems.append(selectable_system)
 	
 	entity.map = self
 	entity.history_transaction.connect(_history_transaction_add)
 	
-	if _selected_entity == null:
-		select_next_entity()
+	if _selected_system == null:
+		select_next()
 
 
 func remove_entity(entity: Entity) -> void:
-	if entity.process:
-		_process_entities.erase(entity)
-		
-	if entity.selectable:
-		_selectable_entities.erase(entity)
+	var selectable_system := entity.get_system("SelectableSystem")
+	if selectable_system is SelectableSystem:
+		_selectable_systems.erase(selectable_system)
 	
 	entity.history_transaction.disconnect(_history_transaction_add)
 	
 	_entity_map.erase(Vector3i(entity.pos.x, entity.pos.y, entity.layer))
 	entity.queue_free()
 	
-	if entity == _selected_entity:
-		select_next_entity()
+	if selectable_system == _selected_system:
+		select_next()
 
 
 func move_entity(entity: Entity, old_pos: Vector2i) -> void:
@@ -179,9 +176,6 @@ func move_entity(entity: Entity, old_pos: Vector2i) -> void:
 	
 	if _entity_map.erase(Vector3i(old_pos.x, old_pos.y, 0)):
 		_entity_map[Vector3i(entity.pos.x, entity.pos.y, 0)] = entity
-	
-	#if entity == _selected_entity:
-		#update_hints()
 
 
 func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:

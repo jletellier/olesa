@@ -3,13 +3,11 @@ extends Node2D
 
 const Map := preload("res://maps/map.gd")
 const Entity := preload("res://entities/entity.gd")
+const EntitySystem := preload("res://entities/entity_system.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
 signal history_transaction(entity: Entity, attribute: String, value: Variant)
-		
-@export var selectable := false
-@export var process := false
 
 var pos := Vector2i.ZERO:
 	set = _set_pos
@@ -17,24 +15,64 @@ var pos := Vector2i.ZERO:
 var layer := 0:
 	set = _set_layer
 
-var selected := false:
-	set = _set_selected
-
 var map: Map
+
+var _systems: Array[EntitySystem] = []
+var _system_map := {} # Typing: Dictionary[String, EntitySystem]
+var _is_running := false
 
 @warning_ignore("unused_private_class_variable")
 @onready var _sprite := $"Sprite2D" as Sprite2D
 
-@onready var _hint_select := $"HintSelect" as EntitySelect
+
+func _ready() -> void:
+	for child in get_children():
+		if child is EntitySystem:
+			child.entity = self
+			_systems.append(child)
+			_system_map[child.name] = child
 
 
-func process_logic() -> void:
-	pass
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		for system in _systems:
+			system.destroy()
 
 
-@warning_ignore("unused_parameter")
-func process_action(dir: Vector2i) -> void:
-	pass
+func init(data := {}) -> void:
+	for system in _systems:
+		var system_data: Dictionary = data.get(system.name, {})
+		system.init(system_data)
+
+
+func serialize() -> Dictionary:
+	var data := {}
+
+	for system in _systems:
+		var system_data := system.serialize()
+		if !system_data.is_empty():
+			data[system.name] = system_data
+
+	return data
+
+
+func tick() -> void:
+	if !_is_running:
+		for system in _systems:
+			system.start()
+		_is_running = true
+	else:
+		for system in _systems:
+			system.tick()
+
+
+func action(dir: Vector2i) -> void:
+	for system in _systems:
+		system.action(dir)
+
+
+func get_system(key: String, default: Variant = null) -> EntitySystem:
+	return _system_map.get(key, default)
 
 
 @warning_ignore("unused_parameter")
@@ -65,12 +103,3 @@ func _set_layer(value: int) -> void:
 	if map != null:
 		map._entity_map.erase(Vector3i(pos.x, pos.y, old_layer))
 		map._entity_map[Vector3i(pos.x, pos.y, layer)] = self
-
-
-func _set_selected(value: bool) -> void:
-	selected = value
-	
-	if _hint_select != null:
-		_hint_select.visible = selected
-		if selected:
-			_hint_select.animate()
