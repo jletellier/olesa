@@ -1,26 +1,34 @@
-[gd_scene load_steps=6 format=3 uid="uid://deqm0i2a2hk42"]
+[gd_scene load_steps=8 format=3 uid="uid://deqm0i2a2hk42"]
 
-[ext_resource type="Script" path="res://entities/container.gd" id="1_ol1in"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_7qyb6"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kp2hf"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_f5630"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_pdpw1"]
-atlas = ExtResource("2_kp2hf")
-region = Rect2(112, 0, 16, 16)
+[ext_resource type="Script" path="res://entities/inventory_system.gd" id="4_f6oec"]
+[ext_resource type="Script" path="res://entities/inventory_display_system.gd" id="5_24eji"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_kp2hf")
 region = Rect2(112, 32, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_ssp5c"]
+atlas = ExtResource("2_kp2hf")
+region = Rect2(112, 0, 16, 16)
+
 [node name="Container" type="Node2D"]
-script = ExtResource("1_ol1in")
-texture_tool = SubResource("AtlasTexture_pdpw1")
+script = ExtResource("1_7qyb6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
 
 [node name="SpriteContent" type="Sprite2D" parent="."]
-visible = false
 
 [node name="HintSelect" parent="." instance=ExtResource("3_f5630")]
 visible = false
+
+[node name="InventorySystem" type="Node" parent="."]
+script = ExtResource("4_f6oec")
+item_type = "tool"
+
+[node name="InventoryDisplaySystem" type="Node" parent="."]
+script = ExtResource("5_24eji")
+sprite_tool = SubResource("AtlasTexture_ssp5c")

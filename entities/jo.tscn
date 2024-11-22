@@ -1,11 +1,13 @@
-[gd_scene load_steps=9 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=11 format=3 uid="uid://bsvas1mydwd7w"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_n560h"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="3_2getj"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_ea5xr"]
 [ext_resource type="AudioStream" uid="uid://d3p0708slfrdp" path="res://assets/sounds/sfx_sounds_interaction22.wav" id="5_ourvx"]
+[ext_resource type="Script" path="res://entities/inventory_system.gd" id="6_3j2dm"]
 [ext_resource type="Script" path="res://entities/selectable_system.gd" id="6_fmwi6"]
+[ext_resource type="Script" path="res://entities/inventory_display_system.gd" id="7_6dlrm"]
 [ext_resource type="Script" path="res://entities/collectable_system.gd" id="7_70jvi"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
@@ -25,6 +27,12 @@ visible = false
 
 [node name="AudioAction" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_ourvx")
+
+[node name="InventorySystem" type="Node" parent="."]
+script = ExtResource("6_3j2dm")
+
+[node name="InventoryDisplaySystem" type="Node" parent="."]
+script = ExtResource("7_6dlrm")
 
 [node name="SelectableSystem" type="Node" parent="."]
 script = ExtResource("6_fmwi6")
