@@ -1,26 +1,15 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjffhhg145jto"]
+[gd_scene load_steps=5 format=3 uid="uid://bjffhhg145jto"]
 
-[ext_resource type="Script" path="res://entities/door.gd" id="1_2e4hr"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_6e7qq"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_1vwym"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_e2eqr"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_o1x3n"]
-atlas = ExtResource("2_1vwym")
-region = Rect2(96, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_sj85y"]
-atlas = ExtResource("2_1vwym")
-region = Rect2(96, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_1vwym")
 region = Rect2(96, 0, 16, 16)
 
 [node name="Door" type="Node2D"]
-script = ExtResource("1_2e4hr")
-texture_door = SubResource("AtlasTexture_o1x3n")
-texture_hint = SubResource("AtlasTexture_sj85y")
-process = true
+script = ExtResource("1_6e7qq")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")

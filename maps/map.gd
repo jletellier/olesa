@@ -41,9 +41,8 @@ func _convert_entities() -> void:
 		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
 		var entity_type := EntityDB.get_by_atlas_coords(cell)
 		if entity_type != {}:
-			var entity_scene := entity_type.scene as PackedScene
 			var entity_data := entity_type.get("data", {}) as Dictionary
-			add_entity(cell_pos, entity_scene, entity_data)
+			add_entity(cell_pos, entity_type, entity_data)
 			
 			# Remove tile, since it's no longer needed
 			_block_layer.erase_cell(cell_pos)
@@ -135,7 +134,8 @@ func select_next() -> void:
 	_selected_system.selected = true
 
 
-func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
+func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
+	var scene := type.scene as PackedScene
 	var entity := scene.instantiate() as Entity
 	entity.position = _block_layer.map_to_local(pos)
 	entity.pos = pos
@@ -143,6 +143,7 @@ func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
 	
 	_entity_map[Vector3i(pos.x, pos.y, entity.layer)] = entity
 	
+	entity.type = type.name
 	entity.map = self
 	entity.history_transaction.connect(_history_transaction_add)
 	entity.init(data)
@@ -176,27 +177,8 @@ func move_entity(entity: Entity, old_pos: Vector2i) -> void:
 		_entity_map[Vector3i(entity.pos.x, entity.pos.y, 0)] = entity
 
 
-func cascade_push(current_pos: Vector2i, dir: Vector2i) -> void:
-	var target_pos := current_pos + dir
-	
-	var current_entity: Entity = _entity_map.get(Vector3i(current_pos.x, current_pos.y, 0))
-	var cascade_entity: Entity = _entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
-	
-	# Cascade push as long as there are entities
-	if current_entity != null and cascade_entity != null:
-		if current_entity.can_push(cascade_entity):
-			cascade_push(target_pos, dir)
-		
-		current_entity.collide_with(cascade_entity)
-		cascade_entity.collide_with(current_entity)
-	
-	# Fetch target cell/entity again, in case it has been moved/removed
-	var target_cell := get_cell(target_pos)
-	var target_entity: Entity = _entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
-	
-	# Action: Target is empty
-	if target_cell == TILE_EMPTY and target_entity == null:
-		current_entity.pos = target_pos
+func get_entity(pos: Vector2i, layer := 0) -> Entity:
+	return _entity_map.get(Vector3i(pos.x, pos.y, layer))
 
 
 func get_cell(pos: Vector2i) -> Vector2i:

@@ -1,17 +1,6 @@
 extends Object
 
 
-const Lawa := preload("res://entities/lawa.gd")
-const Jo := preload("res://entities/jo.gd")
-const Pali := preload("res://entities/pali.gd")
-const EntityObject := preload("res://entities/object.gd")
-const Surface := preload("res://entities/surface.gd")
-const WallCracked := preload("res://entities/wall_cracked.gd")
-const Door := preload("res://entities/door.gd")
-const EntityContainer := preload("res://entities/container.gd")
-const Mountain := preload("res://entities/mountain.gd")
-const Construction := preload("res://entities/construction.gd")
-
 const Types: Array[Dictionary] = [
 	{
 		"name": &"lawa",

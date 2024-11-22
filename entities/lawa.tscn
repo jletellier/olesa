@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://caugnw42x3kq2"]
+[gd_scene load_steps=10 format=3 uid="uid://caugnw42x3kq2"]
 
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="1_flunk"]
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_y3dho"]
@@ -6,6 +6,8 @@
 [ext_resource type="AudioStream" uid="uid://dyqhgq7omjhjj" path="res://assets/sounds/rollover1.wav" id="4_eiucj"]
 [ext_resource type="Script" path="res://entities/selectable_system.gd" id="5_2orfa"]
 [ext_resource type="Script" path="res://entities/moveable_system.gd" id="6_aq4q1"]
+[ext_resource type="Script" path="res://entities/moveable_audio_system.gd" id="7_7ttow"]
+[ext_resource type="Script" path="res://entities/lawa_secret_system.gd" id="8_odmhf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("1_flunk")
@@ -28,3 +30,10 @@ script = ExtResource("5_2orfa")
 
 [node name="MoveableSystem" type="Node" parent="."]
 script = ExtResource("6_aq4q1")
+can_initiate = true
+
+[node name="MoveableAudioSystem" type="Node" parent="."]
+script = ExtResource("7_7ttow")
+
+[node name="LawaSecretSystem" type="Node" parent="."]
+script = ExtResource("8_odmhf")

@@ -9,6 +9,8 @@ const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
 signal history_transaction(entity: Entity, attribute: String, value: Variant)
 
+var type: StringName
+
 var pos := Vector2i.ZERO:
 	set = _set_pos
 

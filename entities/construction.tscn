@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cj256ib43uol0"]
 
-[ext_resource type="Script" path="res://entities/construction.gd" id="1_lesij"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_ln8s2"]
 [ext_resource type="PackedScene" uid="uid://c1gf5gur01aib" path="res://ui/hints/entity_progress.tscn" id="2_xgtwf"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="3_e376k"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="4_mbcbg"]
@@ -12,8 +12,7 @@ atlas = ExtResource("3_e376k")
 region = Rect2(0, 32, 16, 16)
 
 [node name="Construction" type="Node2D"]
-script = ExtResource("1_lesij")
-process = true
+script = ExtResource("1_ln8s2")
 
 [node name="HintProgress" parent="." instance=ExtResource("2_xgtwf")]
 visible = false

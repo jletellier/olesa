@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://8hdqxg6ftswt"]
 
-[ext_resource type="Script" path="res://entities/mountain.gd" id="1_5dbeh"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_njwcv"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_54xt5"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_y12td"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="4_3ktd7"]
@@ -12,8 +12,7 @@ atlas = ExtResource("2_54xt5")
 region = Rect2(80, 16, 16, 16)
 
 [node name="Mountain" type="Node2D"]
-script = ExtResource("1_5dbeh")
-process = true
+script = ExtResource("1_njwcv")
 
 [node name="HintProgress" parent="." instance=ExtResource("4_q65g5")]
 visible = false

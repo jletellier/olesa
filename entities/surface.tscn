@@ -1,22 +1,23 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo6rcyeb2v3ub"]
+[gd_scene load_steps=10 format=3 uid="uid://bo6rcyeb2v3ub"]
 
-[ext_resource type="Script" path="res://entities/surface.gd" id="1_sqos7"]
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_1g0cr"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_mhrcu"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_4abra"]
 [ext_resource type="AudioStream" uid="uid://ktg4akw4o6y7" path="res://assets/sounds/anchor_action.wav" id="4_aso7b"]
 [ext_resource type="PackedScene" uid="uid://gm5ut26i1o8n" path="res://ui/hints/entity_success.tscn" id="4_sm0ki"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3tbfh"]
-atlas = ExtResource("2_mhrcu")
-region = Rect2(64, 0, 16, 16)
+[ext_resource type="Script" path="res://entities/moveable_system.gd" id="6_ccb6b"]
+[ext_resource type="Script" path="res://entities/surface_system.gd" id="7_0egyd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_mhrcu")
 region = Rect2(48, 0, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_8k0dp"]
+atlas = ExtResource("2_mhrcu")
+region = Rect2(64, 0, 16, 16)
+
 [node name="Surface" type="Node2D"]
-script = ExtResource("1_sqos7")
-texture_object = SubResource("AtlasTexture_3tbfh")
+script = ExtResource("1_1g0cr")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
@@ -28,3 +29,11 @@ visible = false
 
 [node name="AudioFinish" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_aso7b")
+
+[node name="MoveableSystem" type="Node" parent="."]
+script = ExtResource("6_ccb6b")
+can_move = false
+
+[node name="SurfaceSystem" type="Node" parent="."]
+script = ExtResource("7_0egyd")
+object_texture = SubResource("AtlasTexture_8k0dp")
