@@ -39,10 +39,10 @@ func _convert_entities() -> void:
 	var cell_positions := _block_layer.get_used_cells()
 	for cell_pos in cell_positions:
 		var cell := _block_layer.get_cell_atlas_coords(cell_pos)
-		if cell in EntityDB.SceneMap:
-			var scene_item := EntityDB.SceneMap[cell] as Dictionary
-			var entity_scene := scene_item.scene as PackedScene
-			var entity_data := scene_item.get("data", {}) as Dictionary
+		var entity_type := EntityDB.get_by_atlas_coords(cell)
+		if entity_type != {}:
+			var entity_scene := entity_type.scene as PackedScene
+			var entity_data := entity_type.get("data", {}) as Dictionary
 			add_entity(cell_pos, entity_scene, entity_data)
 			
 			# Remove tile, since it's no longer needed
@@ -139,19 +139,17 @@ func add_entity(pos: Vector2i, scene: PackedScene, data := {}) -> void:
 	var entity := scene.instantiate() as Entity
 	entity.position = _block_layer.map_to_local(pos)
 	entity.pos = pos
-	for attribute in data:
-		if attribute in entity:
-			entity.set(attribute, data[attribute])
 	_entities_container.add_child(entity)
 	
 	_entity_map[Vector3i(pos.x, pos.y, entity.layer)] = entity
 	
+	entity.map = self
+	entity.history_transaction.connect(_history_transaction_add)
+	entity.init(data)
+	
 	var selectable_system := entity.get_system("SelectableSystem")
 	if selectable_system is SelectableSystem:
 		_selectable_systems.append(selectable_system)
-	
-	entity.map = self
-	entity.history_transaction.connect(_history_transaction_add)
 	
 	if _selected_system == null:
 		select_next()

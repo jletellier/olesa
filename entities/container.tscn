@@ -27,7 +27,6 @@ visible = false
 
 [node name="InventorySystem" type="Node" parent="."]
 script = ExtResource("4_f6oec")
-item_type = "tool"
 
 [node name="InventoryDisplaySystem" type="Node" parent="."]
 script = ExtResource("5_24eji")
