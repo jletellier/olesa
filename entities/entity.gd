@@ -23,9 +23,6 @@ var _systems: Array[EntitySystem] = []
 var _system_map := {} # Typing: Dictionary[String, EntitySystem]
 var _is_running := false
 
-@warning_ignore("unused_private_class_variable")
-@onready var _sprite := $"Sprite2D" as Sprite2D
-
 
 func _ready() -> void:
 	for child in get_children():
@@ -75,16 +72,6 @@ func action(dir: Vector2i) -> void:
 
 func get_system(key: String, default: Variant = null) -> EntitySystem:
 	return _system_map.get(key, default)
-
-
-@warning_ignore("unused_parameter")
-func collide_with(target_entity: Entity) -> void:
-	pass
-
-
-@warning_ignore("unused_parameter")
-func can_push(target_entity: Entity) -> bool:
-	return false
 
 
 func _set_pos(value: Vector2i) -> void:

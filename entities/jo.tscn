@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=13 format=3 uid="uid://bsvas1mydwd7w"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_n560h"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
@@ -7,12 +7,17 @@
 [ext_resource type="AudioStream" uid="uid://d3p0708slfrdp" path="res://assets/sounds/sfx_sounds_interaction22.wav" id="5_ourvx"]
 [ext_resource type="Script" path="res://entities/inventory_system.gd" id="6_3j2dm"]
 [ext_resource type="Script" path="res://entities/selectable_system.gd" id="6_fmwi6"]
-[ext_resource type="Script" path="res://entities/inventory_display_system.gd" id="7_6dlrm"]
+[ext_resource type="Script" path="res://entities/moveable_system.gd" id="6_u2tp0"]
 [ext_resource type="Script" path="res://entities/collectable_system.gd" id="7_70jvi"]
+[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="8_rpt4g"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_kuyye")
 region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_52p4f"]
+atlas = ExtResource("2_kuyye")
+region = Rect2(112, 0, 16, 16)
 
 [node name="Jo" type="Node2D"]
 script = ExtResource("1_n560h")
@@ -28,11 +33,15 @@ visible = false
 [node name="AudioAction" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_ourvx")
 
+[node name="MoveableSystem" type="Node" parent="."]
+script = ExtResource("6_u2tp0")
+
 [node name="InventorySystem" type="Node" parent="."]
 script = ExtResource("6_3j2dm")
 
-[node name="InventoryDisplaySystem" type="Node" parent="."]
-script = ExtResource("7_6dlrm")
+[node name="InventoryFxSystem" type="Node" parent="."]
+script = ExtResource("8_rpt4g")
+sprite_tool = SubResource("AtlasTexture_52p4f")
 
 [node name="SelectableSystem" type="Node" parent="."]
 script = ExtResource("6_fmwi6")

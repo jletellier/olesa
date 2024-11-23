@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://vswtppcekq0g"]
+[gd_scene load_steps=7 format=3 uid="uid://vswtppcekq0g"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_w8nqi"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_dxdso"]
-[ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_u7yma"]
+[ext_resource type="Script" path="res://entities/moveable_system.gd" id="4_akxus"]
 [ext_resource type="AudioStream" uid="uid://cg0tmlxnajsvp" path="res://assets/sounds/sfx_sounds_impact11.wav" id="4_ujcjs"]
+[ext_resource type="Script" path="res://entities/destructible_system.gd" id="5_541xg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_dxdso")
@@ -15,8 +16,12 @@ script = ExtResource("1_w8nqi")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = SubResource("AtlasTexture_j2147")
 
-[node name="HintSelect" parent="." instance=ExtResource("3_u7yma")]
-visible = false
-
 [node name="AudioDestroy" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_ujcjs")
+
+[node name="MoveableSystem" type="Node" parent="."]
+script = ExtResource("4_akxus")
+can_move = false
+
+[node name="DestructibleSystem" type="Node" parent="."]
+script = ExtResource("5_541xg")

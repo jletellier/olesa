@@ -26,10 +26,11 @@ func cascade_push(dir: Vector2i) -> void:
 		var cascade_system: MoveableSystem = cascade_entity.get_system("MoveableSystem")
 	
 		if cascade_system != null:
-			cascade_system.cascade_push(dir)
-		
 			collided_with.emit(cascade_entity)
 			cascade_system.collided_with.emit(entity)
+			
+			if !cascade_entity.is_queued_for_deletion():
+				cascade_system.cascade_push(dir)
 	
 	# Fetch target cell/entity again, in case it has been moved/removed
 	var target_cell := entity.map.get_cell(target_pos)

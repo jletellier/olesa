@@ -46,6 +46,8 @@ func _convert_entities() -> void:
 			
 			# Remove tile, since it's no longer needed
 			_block_layer.erase_cell(cell_pos)
+	
+	select_next.call_deferred()
 
 
 func _history_transaction_add(entity: Entity, attribute: String, value: Variant) -> void:
@@ -107,8 +109,7 @@ func get_moore_neighbors(pos: Vector2i, layer := 0) -> Array[Entity]:
 	var neighbors: Array[Entity] = []
 	var surrounding_positions := _block_layer.get_surrounding_cells(pos)
 	for surrounding_pos in surrounding_positions:
-		var entity: Entity = _entity_map.get(
-				Vector3i(surrounding_pos.x, surrounding_pos.y, layer))
+		var entity := get_entity(surrounding_pos, layer)
 		if entity != null:
 			neighbors.append(entity)
 	
@@ -151,9 +152,6 @@ func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
 	var selectable_system := entity.get_system("SelectableSystem")
 	if selectable_system is SelectableSystem:
 		_selectable_systems.append(selectable_system)
-	
-	if _selected_system == null:
-		select_next()
 
 
 func remove_entity(entity: Entity) -> void:

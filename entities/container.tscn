@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kp2hf"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_f5630"]
 [ext_resource type="Script" path="res://entities/inventory_system.gd" id="4_f6oec"]
-[ext_resource type="Script" path="res://entities/inventory_display_system.gd" id="5_24eji"]
+[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="5_24eji"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_kp2hf")

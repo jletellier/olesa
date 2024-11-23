@@ -7,6 +7,7 @@ const EntityPossess := preload("res://ui/hints/entity_possess.gd")
 @export var sprite_tool: Texture2D
 
 var _hint_possess: EntityPossess
+var _audio_action: AudioStreamPlayer
 var _sprite_content: Sprite2D
 var _inventory: InventorySystem
 
@@ -14,16 +15,17 @@ var _inventory: InventorySystem
 func start() -> void:
 	_hint_possess = entity.get_node_or_null("HintPossess")
 	_sprite_content = entity.get_node_or_null("SpriteContent")
+	_audio_action = entity.get_node_or_null("AudioAction")
 	_inventory = entity.get_system("InventorySystem")
 	
-	if _inventory != null:
-		_inventory.items_changed.connect(_on_inventory_items_changed)
-		_on_inventory_items_changed()
+	if _sprite_content != null:
+		_sprite_content.texture = sprite_tool if (_inventory.item_type != "") else null
+	
+	_inventory.items_changed.connect(_on_inventory_items_changed)
 
 
 func destroy() -> void:
-	if _inventory != null:
-		_inventory.items_changed.disconnect(_on_inventory_items_changed)
+	_inventory.items_changed.disconnect(_on_inventory_items_changed)
 
 
 func _on_inventory_items_changed() -> void:
@@ -32,3 +34,6 @@ func _on_inventory_items_changed() -> void:
 	
 	if _sprite_content != null:
 		_sprite_content.texture = sprite_tool if (_inventory.item_type != "") else null
+	
+	if _audio_action != null:
+		_audio_action.play()

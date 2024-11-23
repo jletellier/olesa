@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bc3sy2adgwdsb"]
+[gd_scene load_steps=10 format=3 uid="uid://bc3sy2adgwdsb"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_mqubp"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_gtttm"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://7gxqe42oqttb" path="res://assets/sounds/Click_Soft_00.wav" id="5_wyotn"]
 [ext_resource type="AudioStream" uid="uid://vnx7uur2wrn0" path="res://assets/sounds/Click_Soft_01.wav" id="6_ti3qy"]
 [ext_resource type="Script" path="res://entities/selectable_system.gd" id="7_tr5hj"]
+[ext_resource type="Script" path="res://entities/targetable_system.gd" id="8_fkm4n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g23ok"]
 atlas = ExtResource("2_gtttm")
@@ -32,3 +33,6 @@ stream = ExtResource("6_ti3qy")
 
 [node name="SelectableSystem" type="Node" parent="."]
 script = ExtResource("7_tr5hj")
+
+[node name="TargetableSystem" type="Node" parent="."]
+script = ExtResource("8_fkm4n")
