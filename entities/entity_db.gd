@@ -83,7 +83,7 @@ static func _static_init():
 			_atlas_coords_map[variant_atlas_coords] = variant_type
 
 
-static func get_by_atlas_name(name: StringName) -> Dictionary:
+static func get_by_name(name: StringName) -> Dictionary:
 	return _name_map.get(name, {})
 
 

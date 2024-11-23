@@ -1,15 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://cj256ib43uol0"]
+[gd_scene load_steps=11 format=3 uid="uid://cj256ib43uol0"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_ln8s2"]
 [ext_resource type="PackedScene" uid="uid://c1gf5gur01aib" path="res://ui/hints/entity_progress.tscn" id="2_xgtwf"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="3_e376k"]
-[ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="4_mbcbg"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="4_u80mg"]
 [ext_resource type="AudioStream" uid="uid://xpfba2vcldk2" path="res://assets/sounds/unlink.wav" id="6_6hj7c"]
+[ext_resource type="Script" path="res://entities/inventory_system.gd" id="6_xg8im"]
+[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="7_s12sb"]
+[ext_resource type="Script" path="res://entities/constructible_system.gd" id="8_d7djn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02wl4"]
 atlas = ExtResource("3_e376k")
 region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x8vvj"]
+atlas = ExtResource("3_e376k")
+region = Rect2(112, 0, 16, 16)
 
 [node name="Construction" type="Node2D"]
 script = ExtResource("1_ln8s2")
@@ -23,8 +29,16 @@ texture = SubResource("AtlasTexture_02wl4")
 [node name="HintPossess" parent="." instance=ExtResource("4_u80mg")]
 position = Vector2(0, -8)
 
-[node name="HintSelect" parent="." instance=ExtResource("4_mbcbg")]
-visible = false
-
 [node name="AudioFinish" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_6hj7c")
+
+[node name="InventorySystem" type="Node" parent="."]
+script = ExtResource("6_xg8im")
+
+[node name="InventoryFxSystem" type="Node" parent="."]
+script = ExtResource("7_s12sb")
+sprite_tool = SubResource("AtlasTexture_x8vvj")
+
+[node name="ConstructibleSystem" type="Node" parent="."]
+script = ExtResource("8_d7djn")
+target_item_name = &"surface"

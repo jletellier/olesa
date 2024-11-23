@@ -1,15 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://8hdqxg6ftswt"]
+[gd_scene load_steps=11 format=3 uid="uid://8hdqxg6ftswt"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_njwcv"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_54xt5"]
-[ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_y12td"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="4_3ktd7"]
 [ext_resource type="PackedScene" uid="uid://c1gf5gur01aib" path="res://ui/hints/entity_progress.tscn" id="4_q65g5"]
 [ext_resource type="AudioStream" uid="uid://bcn7rfyalgaom" path="res://assets/sounds/link.wav" id="6_80idj"]
+[ext_resource type="Script" path="res://entities/mineable_system.gd" id="6_ttola"]
+[ext_resource type="Script" path="res://entities/inventory_system.gd" id="7_5705r"]
+[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="8_wulga"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02wl4"]
 atlas = ExtResource("2_54xt5")
 region = Rect2(80, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7u8si"]
+atlas = ExtResource("2_54xt5")
+region = Rect2(112, 0, 16, 16)
 
 [node name="Mountain" type="Node2D"]
 script = ExtResource("1_njwcv")
@@ -22,8 +28,15 @@ texture = SubResource("AtlasTexture_02wl4")
 
 [node name="HintPossess" parent="." instance=ExtResource("4_3ktd7")]
 
-[node name="HintSelect" parent="." instance=ExtResource("3_y12td")]
-visible = false
-
 [node name="AudioFinish" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_80idj")
+
+[node name="InventorySystem" type="Node" parent="."]
+script = ExtResource("7_5705r")
+
+[node name="InventoryFxSystem" type="Node" parent="."]
+script = ExtResource("8_wulga")
+sprite_tool = SubResource("AtlasTexture_7u8si")
+
+[node name="MineableSystem" type="Node" parent="."]
+script = ExtResource("6_ttola")
