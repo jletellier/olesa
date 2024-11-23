@@ -1,0 +1,80 @@
+[gd_scene load_steps=20 format=3 uid="uid://dmalqi52hecqj"]
+
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_80twv"]
+[ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_n0qkf"]
+[ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_05s0g"]
+[ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="3_v1bb8"]
+[ext_resource type="AudioStream" uid="uid://dyqhgq7omjhjj" path="res://assets/sounds/rollover1.wav" id="4_44mag"]
+[ext_resource type="PackedScene" uid="uid://bus45ea8g5esx" path="res://ui/hints/entity_target.tscn" id="5_o5lgx"]
+[ext_resource type="Script" path="res://entities/selectable_system.gd" id="5_qf5ck"]
+[ext_resource type="Script" path="res://entities/moveable_system.gd" id="6_41fno"]
+[ext_resource type="AudioStream" uid="uid://d3p0708slfrdp" path="res://assets/sounds/sfx_sounds_interaction22.wav" id="6_k3bcg"]
+[ext_resource type="Script" path="res://entities/moveable_audio_system.gd" id="7_k7rtb"]
+[ext_resource type="AudioStream" uid="uid://7gxqe42oqttb" path="res://assets/sounds/Click_Soft_00.wav" id="8_2qxry"]
+[ext_resource type="Script" path="res://entities/lawa_secret_system.gd" id="8_66lwr"]
+[ext_resource type="AudioStream" uid="uid://vnx7uur2wrn0" path="res://assets/sounds/Click_Soft_01.wav" id="9_0cxg6"]
+[ext_resource type="Script" path="res://entities/inventory_system.gd" id="10_7e6eo"]
+[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="11_wk774"]
+[ext_resource type="Script" path="res://entities/collectable_system.gd" id="12_ue04q"]
+[ext_resource type="Script" path="res://entities/targetable_system.gd" id="16_bfcxf"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d1gw6"]
+atlas = ExtResource("2_n0qkf")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ckgs"]
+atlas = ExtResource("2_n0qkf")
+region = Rect2(112, 0, 16, 16)
+
+[node name="Jan" type="Node2D"]
+script = ExtResource("1_80twv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_d1gw6")
+
+[node name="HintPossess" parent="." instance=ExtResource("3_v1bb8")]
+position = Vector2(0, -5)
+
+[node name="HintSelect" parent="." instance=ExtResource("3_05s0g")]
+visible = false
+
+[node name="HintTarget" parent="." instance=ExtResource("5_o5lgx")]
+visible = false
+
+[node name="AudioMovement" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_44mag")
+
+[node name="AudioAction" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_k3bcg")
+
+[node name="AudioTargetSuccess" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_2qxry")
+
+[node name="AudioTargetFailure" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_0cxg6")
+
+[node name="SelectableSystem" type="Node" parent="."]
+script = ExtResource("5_qf5ck")
+
+[node name="MoveableSystem" type="Node" parent="."]
+script = ExtResource("6_41fno")
+can_initiate = true
+
+[node name="MoveableAudioSystem" type="Node" parent="."]
+script = ExtResource("7_k7rtb")
+
+[node name="InventorySystem" type="Node" parent="."]
+script = ExtResource("10_7e6eo")
+
+[node name="InventoryFxSystem" type="Node" parent="."]
+script = ExtResource("11_wk774")
+sprite_tool = SubResource("AtlasTexture_3ckgs")
+
+[node name="CollectableSystem" type="Node" parent="."]
+script = ExtResource("12_ue04q")
+
+[node name="TargetableSystem" type="Node" parent="."]
+script = ExtResource("16_bfcxf")
+
+[node name="LawaSecretSystem" type="Node" parent="."]
+script = ExtResource("8_66lwr")

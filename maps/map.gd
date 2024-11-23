@@ -179,6 +179,17 @@ func get_entity(pos: Vector2i, layer := 0) -> Entity:
 	return _entity_map.get(Vector3i(pos.x, pos.y, layer))
 
 
+func get_entities_with_system(system: String) -> Array[Entity]:
+	var entities: Array[Entity] = []
+	
+	for entity in _entity_map.values():
+		if entity is Entity:
+			if entity.get_system(system) != null:
+				entities.append(entity)
+	
+	return entities
+
+
 func get_cell(pos: Vector2i) -> Vector2i:
 	return _block_layer.get_cell_atlas_coords(pos)
 

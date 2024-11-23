@@ -9,6 +9,8 @@ signal moved()
 @export var can_initiate := false
 @export var can_move := true
 
+var target_pos := Vector2i.ZERO
+
 
 func action(dir: Vector2i) -> void:
 	if can_initiate:
@@ -19,7 +21,7 @@ func cascade_push(dir: Vector2i) -> void:
 	if !can_move:
 		return
 	
-	var target_pos := entity.pos + dir
+	target_pos = entity.pos + dir
 	
 	var cascade_entity: Entity = entity.map.get_entity(target_pos)
 	if cascade_entity != null:

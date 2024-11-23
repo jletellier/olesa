@@ -78,11 +78,9 @@ func _set_pos(value: Vector2i) -> void:
 	var old_pos := pos
 	pos = value
 	
-	if map != null:
+	if map != null and pos != old_pos:
 		map.move_entity(self, old_pos)
-		
-		if pos != old_pos:
-			history_transaction.emit(self, "pos", old_pos)
+		history_transaction.emit(self, "pos", old_pos)
 
 
 func _set_layer(value: int) -> void:

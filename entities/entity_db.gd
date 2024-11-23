@@ -18,6 +18,11 @@ const Types: Array[Dictionary] = [
 		"scene": preload("res://entities/pali.tscn"),
 	},
 	{ 
+		"name": &"jan",
+		"atlas_coords": Vector2i(3, 1),
+		"scene": preload("res://entities/jan.tscn"),
+	},
+	{ 
 		"name": &"object",
 		"atlas_coords": Vector2i(2, 0),
 		"scene": preload("res://entities/object.tscn"),
@@ -36,6 +41,11 @@ const Types: Array[Dictionary] = [
 		"name": &"door",
 		"atlas_coords": Vector2i(6, 0),
 		"scene": preload("res://entities/door.tscn"),
+	},
+	{ 
+		"name": &"portal",
+		"atlas_coords": Vector2i(4, 1),
+		"scene": preload("res://entities/portal.tscn"),
 	},
 	{ 
 		"name": &"container",
