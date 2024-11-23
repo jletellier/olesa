@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cucxdxqh272y6"]
+
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_foqqa"]
+[ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_bvodx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6cpj4"]
+atlas = ExtResource("2_bvodx")
+region = Rect2(0, 0, 16, 16)
+
+[node name="Wall" type="Node2D"]
+script = ExtResource("1_foqqa")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_6cpj4")

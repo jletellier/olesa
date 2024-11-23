@@ -33,6 +33,11 @@ const Types: Array[Dictionary] = [
 		"scene": preload("res://entities/surface.tscn"),
 	},
 	{ 
+		"name": &"wall",
+		"atlas_coords": Vector2i(-1, -1),
+		"scene": preload("res://entities/wall.tscn"),
+	},
+	{ 
 		"name": &"wall_cracked",
 		"atlas_coords": Vector2i(5, 0),
 		"scene": preload("res://entities/wall_cracked.tscn"),
@@ -46,6 +51,78 @@ const Types: Array[Dictionary] = [
 		"name": &"portal",
 		"atlas_coords": Vector2i(4, 1),
 		"scene": preload("res://entities/portal.tscn"),
+	},
+	{ 
+		"name": &"sitelen_lawa",
+		"atlas_coords": Vector2i(4, 5),
+		"scene": preload("res://entities/sitelen_lawa.tscn"),
+	},
+	{ 
+		"name": &"sitelen",
+		"atlas_coords": Vector2i(0, 4),
+		"scene": preload("res://entities/sitelen.tscn"),
+		"variants": [
+			{
+				"atlas_coords": Vector2i(1, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 4, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(2, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 5, "shift_type": &"wall" } },
+			},
+			{
+				"atlas_coords": Vector2i(3, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 6, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(5, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 8, "shift_type": &"wall" } },
+			},
+			{
+				"atlas_coords": Vector2i(6, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 9, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(7, 5),
+				"data": { "SitelenSystem": { "sitelen_id": 10, "shift_type": &"wall" } },
+			},
+			{
+				"atlas_coords": Vector2i(1, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 11, "shift_type": &"door" } },
+			},
+			{
+				"atlas_coords": Vector2i(2, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 12, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(3, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 13, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(4, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 14, "shift_type": &"object" } },
+			},
+			{
+				"atlas_coords": Vector2i(5, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 15, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(6, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 16, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(7, 6),
+				"data": { "SitelenSystem": { "sitelen_id": 17, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(2, 7),
+				"data": { "SitelenSystem": { "sitelen_id": 18, "shift_type": &"" } },
+			},
+			{
+				"atlas_coords": Vector2i(3, 7),
+				"data": { "SitelenSystem": { "sitelen_id": 19, "shift_type": &"" } },
+			},
+		]
 	},
 	{ 
 		"name": &"container",

@@ -13,6 +13,7 @@ var _selected_system: SelectableSystem
 var _history := []
 var _history_transaction := []
 var _history_undo_process := false
+var _is_running := false
 
 @onready var _block_layer := $"BlockLayer" as TileMapLayer
 @onready var _entities_container := $"Entities" as Node2D
@@ -21,6 +22,8 @@ var _history_undo_process := false
 func _ready() -> void:
 	_convert_entities()
 	_process_tick()
+	
+	_is_running = true
 	
 	# Workaround, only for editing purposes; allows to run a map on its own
 	if OS.has_feature("editor") and get_tree().root.get_child(0) == self:
@@ -148,6 +151,10 @@ func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
 	entity.map = self
 	entity.history_transaction.connect(_history_transaction_add)
 	entity.init(data)
+	
+	if _is_running:
+		entity.tick()
+		entity.tick()
 	
 	var selectable_system := entity.get_system("SelectableSystem")
 	if selectable_system is SelectableSystem:
