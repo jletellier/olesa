@@ -35,7 +35,12 @@ func _on_collided_with(other_entity: Entity) -> void:
 	if cascade_entity != null:
 		var cascade_moveable_system: MoveableSystem = cascade_entity.get_system("MoveableSystem")
 		if cascade_moveable_system != null:
-			cascade_moveable_system.cascade_push(dir)
+			other_moveable_system.collided_with.emit(cascade_entity)
+			cascade_moveable_system.collided_with.emit(other_entity)
+			
+			if !cascade_entity.is_queued_for_deletion() and \
+					!other_entity.is_queued_for_deletion():
+				cascade_moveable_system.cascade_push(dir)
 	
 	# Fetch target cell/entity on the other side of the portal
 	var target_cell := entity.map.get_cell(target_pos)
