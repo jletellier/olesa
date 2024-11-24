@@ -132,7 +132,11 @@ const Types: Array[Dictionary] = [
 			{
 				"atlas_coords": Vector2i(7, 0),
 				"data": { "InventorySystem": { "item_type": "tool" } },
-			}
+			},
+			{
+				"atlas_coords": Vector2i(7, 1),
+				"data": { "InventorySystem": { "item_type": "stone" } },
+			},
 		]
 	},
 	{ 
@@ -144,6 +148,27 @@ const Types: Array[Dictionary] = [
 		"name": &"construction",
 		"atlas_coords": Vector2i(0, 2),
 		"scene": preload("res://entities/construction.tscn"),
+		"variants": [
+			{
+				"atlas_coords": Vector2i(0, 3),
+				"data": {
+					"ConstructibleSystem": {
+						"processing_item_name": "stone",
+						"target_item_name": "surface",
+					},
+				},
+			},
+			{
+				"atlas_coords": Vector2i(1, 3),
+				"data": {
+					"ConstructibleSystem": {
+						"processing_item_name": "stone",
+						"target_item_name": "surface",
+					},
+					"InventorySystem": { "item_type": "stone" },
+				},
+			},
+		]
 	},
 ]
 

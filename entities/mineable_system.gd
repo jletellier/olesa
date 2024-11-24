@@ -29,7 +29,7 @@ func tick() -> void:
 		_update_hints()
 		
 		if processing_step >= processing_count:
-			_inventory.store_item("tool")
+			_inventory.store_item("stone")
 			processing_step = 0
 			_audio_finish.play()
 

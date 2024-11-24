@@ -4,8 +4,15 @@ extends "res://entities/entity_system.gd"
 const InventorySystem := preload("res://entities/inventory_system.gd")
 const EntityPossess := preload("res://ui/hints/entity_possess.gd")
 
-@export var sprite_tool: Texture2D
+@export var textures: Array[Texture2D] = []
 
+var texture_map := {
+	&"": 0,
+	&"tool": 1,
+	&"stone": 2,
+}
+
+var _is_running := false
 var _hint_possess: EntityPossess
 var _audio_action: AudioStreamPlayer
 var _sprite_content: Sprite2D
@@ -18,10 +25,10 @@ func start() -> void:
 	_audio_action = entity.get_node_or_null("AudioAction")
 	_inventory = entity.get_system("InventorySystem")
 	
-	if _sprite_content != null:
-		_sprite_content.texture = sprite_tool if (_inventory.item_type != "") else null
-	
 	_inventory.items_changed.connect(_on_inventory_items_changed)
+	_on_inventory_items_changed()
+	
+	_is_running = true
 
 
 func destroy() -> void:
@@ -29,11 +36,14 @@ func destroy() -> void:
 
 
 func _on_inventory_items_changed() -> void:
-	if _hint_possess != null:
-		_hint_possess.active = (_inventory.item_type != "")
-	
 	if _sprite_content != null:
-		_sprite_content.texture = sprite_tool if (_inventory.item_type != "") else null
+		_sprite_content.texture = textures[texture_map.get(_inventory.item_type, 0)]
 	
-	if _audio_action != null:
+	if _hint_possess != null:
+		var old_active := _hint_possess.active
+		var new_active := (_inventory.item_type != "")
+		if old_active != new_active:
+			_hint_possess.active = new_active
+	
+	if _is_running and _audio_action != null:
 		_audio_action.play()

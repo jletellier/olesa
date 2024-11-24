@@ -6,6 +6,7 @@ const EntityPossess := preload("res://ui/hints/entity_possess.gd")
 const InventorySystem := preload("res://entities/inventory_system.gd")
 
 @export var processing_count := 3
+@export var processing_item_name: StringName
 @export var target_item_name: StringName
 
 var processing_step := 0
@@ -18,6 +19,18 @@ var _audio_finish: AudioStreamPlayer
 var _inventory: InventorySystem
 
 
+func init(data := {}) -> void:
+	processing_item_name = data.get("processing_item_name", &"")
+	target_item_name = data.get("target_item_name", &"")
+
+
+func serialize() -> Dictionary:
+	return {
+		"processing_item_name": processing_item_name,
+		"target_item_name": target_item_name,
+	}
+
+
 func start() -> void:
 	_hint_progress = entity.get_node("HintProgress")
 	_audio_finish = entity.get_node("AudioFinish")
@@ -25,7 +38,7 @@ func start() -> void:
 
 
 func tick() -> void:
-	if worker != null and _inventory.item_type == "tool":
+	if worker != null and _inventory.item_type == processing_item_name:
 		processing_step += 1
 		_update_hints()
 		
