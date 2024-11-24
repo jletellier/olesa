@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bo6rcyeb2v3ub"]
+[gd_scene load_steps=11 format=3 uid="uid://bo6rcyeb2v3ub"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_1g0cr"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_mhrcu"]
@@ -9,6 +9,10 @@
 [ext_resource type="Script" path="res://entities/surface_system.gd" id="7_0egyd"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
+atlas = ExtResource("2_mhrcu")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nn7sc"]
 atlas = ExtResource("2_mhrcu")
 region = Rect2(48, 0, 16, 16)
 
@@ -36,4 +40,5 @@ can_move = false
 
 [node name="SurfaceSystem" type="Node" parent="."]
 script = ExtResource("7_0egyd")
+default_texture = SubResource("AtlasTexture_nn7sc")
 object_texture = SubResource("AtlasTexture_8k0dp")

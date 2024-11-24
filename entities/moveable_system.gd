@@ -9,6 +9,14 @@ signal moved()
 @export var can_initiate := false
 @export var can_move := true
 
+var pos := Vector2i.ZERO:
+	get: return entity.pos
+	set(value):
+		var old_value := pos
+		entity.pos = value
+		if old_value != value:
+			emit_history_transaction("pos", old_value)
+
 var target_pos := Vector2i.ZERO
 
 
@@ -40,5 +48,5 @@ func cascade_push(dir: Vector2i) -> void:
 	
 	# Action: Target is empty
 	if target_cell == entity.map.TILE_EMPTY and target_entity == null:
-		entity.pos = target_pos
+		pos = target_pos
 		moved.emit()

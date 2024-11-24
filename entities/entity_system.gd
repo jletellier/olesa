@@ -30,3 +30,7 @@ func action(dir: Vector2i) -> void:
 
 func destroy() -> void:
 	pass
+
+
+func emit_history_transaction(attribute, value) -> void:
+	entity.history_transaction.emit(entity, name, attribute, value)

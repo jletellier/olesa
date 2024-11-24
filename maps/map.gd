@@ -3,6 +3,7 @@ extends Node2D
 
 const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
+const EntitySystem := preload("res://entities/entity_system.gd")
 const SelectableSystem := preload("res://entities/selectable_system.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
@@ -53,11 +54,10 @@ func _convert_entities() -> void:
 	select_next.call_deferred()
 
 
-func _history_transaction_add(entity: Entity, attribute: String, value: Variant) -> void:
+func _history_transaction_add(step: Array) -> void:
 	if _history_undo_process:
 		return
 	
-	var step := [entity, attribute, value]
 	_history_transaction.append(step)
 
 
@@ -68,11 +68,25 @@ func _history_transaction_undo(transaction := []) -> void:
 	_history_undo_process = true
 	for i in range(transaction.size() - 1, -1, -1):
 		var step: Array = transaction[i]
-		var entity: Entity = step[0]
-		var attribute: String = step[1]
-		var value: Variant = step[2]
+		var type: String = step[0]
 		
-		entity.set(attribute, value)
+		if type == "system_update":
+			var entity_pos: Vector3i = step[1]
+			var system: String = step[2]
+			var attribute: String = step[3]
+			var value: Variant = step[4]
+			
+			var entity := get_entity(Vector2i(entity_pos.x, entity_pos.y), entity_pos.z)
+			var entity_system := entity.get_system(system)
+			if entity_system != null and attribute in entity_system:
+				entity_system.set(attribute, value)
+		elif type == "remove_entity":
+			var entity_pos: Vector2i = step[1]
+			var entity_name: StringName = step[2]
+			var entity_data: Dictionary = step[3]
+			
+			var entity_type := EntityDB.get_by_name(entity_name)
+			add_entity(entity_pos, entity_type, entity_data)
 	
 	_history_undo_process = false
 	_history_transaction = []
@@ -149,7 +163,7 @@ func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
 	
 	entity.type = type.name
 	entity.map = self
-	entity.history_transaction.connect(_history_transaction_add)
+	entity.history_transaction.connect(_on_history_transaction)
 	entity.init(data)
 	
 	if _is_running:
@@ -166,7 +180,10 @@ func remove_entity(entity: Entity) -> void:
 	if selectable_system is SelectableSystem:
 		_selectable_systems.erase(selectable_system)
 	
-	entity.history_transaction.disconnect(_history_transaction_add)
+	entity.history_transaction.disconnect(_on_history_transaction)
+	
+	var history_step = ["remove_entity", entity.pos, entity.type, entity.serialize()]
+	_history_transaction_add(history_step)
 	
 	_entity_map.erase(Vector3i(entity.pos.x, entity.pos.y, entity.layer))
 	entity.queue_free()
@@ -211,3 +228,10 @@ func get_map_size() -> Vector2i:
 
 func get_tile_size() -> Vector2i:
 	return _block_layer.tile_set.tile_size
+
+
+func _on_history_transaction(
+		entity: Entity, system: String, attribute: String, value: Variant) -> void:
+	var entity_pos := Vector3i(entity.pos.x, entity.pos.y, entity.layer)
+	var step := ["system_update", entity_pos, system, attribute, value]
+	_history_transaction_add(step)

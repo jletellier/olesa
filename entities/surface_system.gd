@@ -4,9 +4,16 @@ extends "res://entities/entity_system.gd"
 const MoveableSystem := preload("res://entities/moveable_system.gd")
 const EntitySuccess := preload("res://ui/hints/entity_success.gd")
 
+@export var default_texture: Texture2D
 @export var object_texture: Texture2D
 
-var has_object := false
+var has_object := false:
+	set(value):
+		var old_value := has_object
+		has_object = value
+		_sprite.texture = object_texture if has_object else default_texture
+		if old_value != value:
+			emit_history_transaction("has_object", old_value)
 
 var _moveable_system: MoveableSystem
 var _hint_success: EntitySuccess
@@ -31,6 +38,5 @@ func _on_collided_with(other_entity: Entity) -> void:
 	if other_entity.type == "object" and !has_object:
 		entity.map.remove_entity(other_entity)
 		has_object = true
-		_sprite.texture = object_texture
 		_hint_success.animate()
 		_audio_finish.play()

@@ -7,7 +7,8 @@ const EntitySystem := preload("res://entities/entity_system.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 const EntitySelect := preload("res://ui/hints/entity_select.gd")
 
-signal history_transaction(entity: Entity, attribute: String, value: Variant)
+@warning_ignore("unused_signal")
+signal history_transaction(entity: Entity, system: String, attribute: String, value: Variant)
 
 var type: StringName
 
@@ -18,10 +19,11 @@ var layer := 0:
 	set = _set_layer
 
 var map: Map
+var is_running := false
 
 var _systems: Array[EntitySystem] = []
 var _system_map := {} # Typing: Dictionary[String, EntitySystem]
-var _is_running := false
+var _first_run := true
 
 
 func _ready() -> void:
@@ -56,18 +58,20 @@ func serialize() -> Dictionary:
 
 
 func tick() -> void:
-	if !_is_running:
+	if _first_run:
 		for system in _systems:
 			system.start()
-		_is_running = true
-	else:
+		is_running = true
+		_first_run = false
+	elif is_running:
 		for system in _systems:
 			system.tick()
 
 
 func action(dir: Vector2i) -> void:
-	for system in _systems:
-		system.action(dir)
+	if is_running:
+		for system in _systems:
+			system.action(dir)
 
 
 func get_system(key: String, default: Variant = null) -> EntitySystem:
@@ -80,7 +84,6 @@ func _set_pos(value: Vector2i) -> void:
 	
 	if map != null and pos != old_pos:
 		map.move_entity(self, old_pos)
-		history_transaction.emit(self, "pos", old_pos)
 
 
 func _set_layer(value: int) -> void:
