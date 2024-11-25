@@ -19,6 +19,3 @@ func destroy() -> void:
 func _on_collided_with(other: Entity) -> void:
 	if other.type == "lawa":
 		entity.map.remove_entity(entity)
-	elif other.type == "sitelen_lawa":
-		entity.map.remove_entity(entity)
-		entity.map.remove_entity(other)

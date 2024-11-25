@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://b61yefdxdmli8"]
+[gd_scene load_steps=30 format=3 uid="uid://b61yefdxdmli8"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_aivgv"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_sd0sq"]
@@ -90,6 +90,18 @@ region = Rect2(32, 112, 16, 16)
 atlas = ExtResource("2_sd0sq")
 region = Rect2(48, 112, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_w35wl"]
+atlas = ExtResource("2_sd0sq")
+region = Rect2(64, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnelm"]
+atlas = ExtResource("2_sd0sq")
+region = Rect2(80, 112, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4bl5j"]
+atlas = ExtResource("2_sd0sq")
+region = Rect2(96, 112, 16, 16)
+
 [node name="Sitelen" type="Node2D"]
 script = ExtResource("1_aivgv")
 
@@ -105,4 +117,4 @@ can_move = false
 
 [node name="SitelenSystem" type="Node" parent="."]
 script = ExtResource("5_m0i63")
-textures = Array[Texture2D]([SubResource("AtlasTexture_stffx"), SubResource("AtlasTexture_fdql5"), SubResource("AtlasTexture_yuext"), SubResource("AtlasTexture_woqpx"), SubResource("AtlasTexture_uwj1o"), SubResource("AtlasTexture_hr4nw"), SubResource("AtlasTexture_2uhyt"), SubResource("AtlasTexture_wj8bm"), SubResource("AtlasTexture_jqnlb"), SubResource("AtlasTexture_08y5o"), SubResource("AtlasTexture_xrd3k"), SubResource("AtlasTexture_i1jog"), SubResource("AtlasTexture_7n1ru"), SubResource("AtlasTexture_y7ieu"), SubResource("AtlasTexture_v4pqt"), SubResource("AtlasTexture_awoe4"), SubResource("AtlasTexture_ta5ge"), SubResource("AtlasTexture_k61yh"), SubResource("AtlasTexture_ewme0"), SubResource("AtlasTexture_5ufxj")])
+textures = Array[Texture2D]([SubResource("AtlasTexture_stffx"), SubResource("AtlasTexture_fdql5"), SubResource("AtlasTexture_yuext"), SubResource("AtlasTexture_woqpx"), SubResource("AtlasTexture_uwj1o"), SubResource("AtlasTexture_hr4nw"), SubResource("AtlasTexture_2uhyt"), SubResource("AtlasTexture_wj8bm"), SubResource("AtlasTexture_jqnlb"), SubResource("AtlasTexture_08y5o"), SubResource("AtlasTexture_xrd3k"), SubResource("AtlasTexture_i1jog"), SubResource("AtlasTexture_7n1ru"), SubResource("AtlasTexture_y7ieu"), SubResource("AtlasTexture_v4pqt"), SubResource("AtlasTexture_awoe4"), SubResource("AtlasTexture_ta5ge"), SubResource("AtlasTexture_k61yh"), SubResource("AtlasTexture_ewme0"), SubResource("AtlasTexture_5ufxj"), SubResource("AtlasTexture_w35wl"), SubResource("AtlasTexture_pnelm"), SubResource("AtlasTexture_4bl5j")])

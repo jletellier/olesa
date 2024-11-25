@@ -5,6 +5,7 @@ const EntityTarget := preload("res://ui/hints/entity_target.gd")
 const SelectableSystem := preload("res://entities/selectable_system.gd")
 const MineableSystem := preload("res://entities/mineable_system.gd")
 const ConstructibleSystem := preload("res://entities/constructible_system.gd")
+const SitelenSystem := preload("res://entities/sitelen_system.gd")
 
 var target_entity: Entity:
 	set = _set_target_entity
@@ -62,6 +63,10 @@ func _set_target_entity(value: Entity) -> void:
 	target_entity = value
 	
 	if target_entity != null:
+		var sitelen_system: SitelenSystem = target_entity.get_system("SitelenSystem")
+		if sitelen_system != null:
+			sitelen_system.interact_with(entity)
+		
 		var mineable_system: MineableSystem = target_entity.get_system("MineableSystem")
 		if mineable_system != null:
 			mineable_system.worker = entity

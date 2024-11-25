@@ -10,6 +10,7 @@ const InventorySystem := preload("res://entities/inventory_system.gd")
 var sitelen_id: int
 var shift_type: StringName
 
+var _audio_destroy: AudioStreamPlayer
 var _sprite: Sprite2D
 var _moveable_system: MoveableSystem
 
@@ -26,7 +27,14 @@ func serialize() -> Dictionary:
 	}
 
 
+func tick() -> void:
+	if entity.layer == 1:
+		if entity.map.get_entity(entity.pos) == null:
+			entity.layer = 0
+
+
 func start() -> void:
+	_audio_destroy = entity.get_node("AudioDestroy")
 	_sprite = entity.get_node("Sprite2D")
 	_sprite.texture = textures[sitelen_id]
 	
@@ -45,11 +53,24 @@ func shift() -> void:
 		entity.map.add_entity(entity.pos, entity_type)
 
 
-func _on_collided_with(other: Entity) -> void:
-	if sitelen_id == 11 and other.type == "jo":
+func interact_with(other: Entity) -> void:
+	if sitelen_id == 7 and other.type == "pali":
+		shift()
+	elif sitelen_id == 16 and other.type == "jo":
 		var inventory: InventorySystem = other.get_system("InventorySystem")
-		if inventory != null and inventory.item_type == "tool":
-			var entities := entity.map.get_entities_with_system("SitelenSystem")
-			for sitelen_entity in entities:
-				var system: SitelenSystem = sitelen_entity.get_system("SitelenSystem")
-				system.shift()
+		if inventory != null:
+			inventory.store_item("tool")
+
+
+func _on_collided_with(other: Entity) -> void:
+	if sitelen_id == 0:
+		entity.layer = 1
+	
+	if sitelen_id == 7 and other.type == "lawa":
+		entity.map.remove_entity(entity)
+		entity.map.remove_entity(other)
+		_audio_destroy.reparent(entity.get_parent())
+		_audio_destroy.play()
+	
+	if other.type == "jo":
+		shift()

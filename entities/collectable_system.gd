@@ -1,18 +1,13 @@
 extends "res://entities/entity_system.gd"
 
 
-const CollectableSystem := preload("res://entities/collectable_system.gd")
 const InventorySystem := preload("res://entities/inventory_system.gd")
-const EntityPossess := preload("res://ui/hints/entity_possess.gd")
+const SitelenSystem := preload("res://entities/sitelen_system.gd")
 
-var _hint_possess: EntityPossess
-var _audio_action: AudioStreamPlayer
 var _inventory: InventorySystem
 
 
 func start() -> void:
-	_hint_possess = entity.get_node("HintPossess")
-	_audio_action = entity.get_node("AudioAction")
 	_inventory = entity.get_system("InventorySystem")
 
 
@@ -22,6 +17,10 @@ func action(dir: Vector2i) -> void:
 	
 	if neighbor == null:
 		return
+	
+	var sitelen_system: SitelenSystem = neighbor.get_system("SitelenSystem")
+	if sitelen_system != null:
+		sitelen_system.interact_with(entity)
 	
 	var neighbor_inventory: InventorySystem = neighbor.get_system("InventorySystem")
 	if neighbor_inventory == null:
