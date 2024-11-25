@@ -16,12 +16,12 @@ Code is licensed under MIT. Artwork is licensed under CC BY 4.0 <img style="heig
 - Sprites created with [Aseprite](https://dacap.itch.io/aseprite)
 
 <details>
-  <summary>- Spoiler warning 🤫</summary>
+  <summary>Spoiler warning 🤫</summary>
 
   - Using sitelen pona by Sonja Lang, the creator of [toki pona](https://tokipona.org/)
 </details>
 
-- Design of intro levels inspired by [Patrick's Parabox](https://store.steampowered.com/app/1260520/Patricks_Parabox/) - awesome game!
+- Design of tutorial levels inspired by [Patrick's Parabox](https://store.steampowered.com/app/1260520/Patricks_Parabox/) - What a great game!
 
 ### Third-Party Assets
 

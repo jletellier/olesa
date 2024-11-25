@@ -87,6 +87,15 @@ func _history_transaction_undo(transaction := []) -> void:
 			
 			var entity_type := EntityDB.get_by_name(entity_name)
 			add_entity(entity_pos, entity_type, entity_data)
+		elif type == "selected_entity":
+			var entity_pos: Vector3i = step[1]
+			var entity := get_entity(Vector2i(entity_pos.x, entity_pos.y), entity_pos.z)
+			var entity_system: SelectableSystem = entity.get_system("SelectableSystem")
+			if entity_system != _selected_system:
+				if _selected_system != null:
+					_selected_system.selected = false
+				_selected_system = entity_system
+				_selected_system.selected = true
 	
 	_history_undo_process = false
 	_history_transaction = []
@@ -95,6 +104,15 @@ func _history_transaction_undo(transaction := []) -> void:
 func _history_transaction_save() -> void:
 	if _history_transaction.size() == 0:
 		return
+	
+	if _selected_system != null:
+		var entity_pos := Vector3i(
+			_selected_system.entity.pos.x,
+			_selected_system.entity.pos.y, 
+			_selected_system.entity.layer,
+		)
+		var history_step = ["selected_entity", entity_pos]
+		_history_transaction_add(history_step)
 
 	_history.push_back(_history_transaction)
 	_history_transaction = []
