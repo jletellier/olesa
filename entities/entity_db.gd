@@ -59,79 +59,79 @@ const Types: Array[Dictionary] = [
 		"variants": [
 			{
 				"atlas_coords": Vector2i(1, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 4, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 4 } },
 			},
 			{
 				"atlas_coords": Vector2i(2, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 5, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 5 } },
 			},
 			{
 				"atlas_coords": Vector2i(3, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 6, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 6 } },
 			},
 			{
 				"atlas_coords": Vector2i(4, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 7, "shift_type": &"lawa" } },
+				"data": { "SitelenSystem": { "sitelen_id": 7 } },
 			},
 			{
 				"atlas_coords": Vector2i(5, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 8, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 8 } },
 			},
 			{
 				"atlas_coords": Vector2i(6, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 9, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 9 } },
 			},
 			{
 				"atlas_coords": Vector2i(7, 5),
-				"data": { "SitelenSystem": { "sitelen_id": 10, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 10 } },
 			},
 			{
 				"atlas_coords": Vector2i(1, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 11, "shift_type": &"door" } },
+				"data": { "SitelenSystem": { "sitelen_id": 11 } },
 			},
 			{
 				"atlas_coords": Vector2i(2, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 12, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 12 } },
 			},
 			{
 				"atlas_coords": Vector2i(3, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 13, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 13 } },
 			},
 			{
 				"atlas_coords": Vector2i(4, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 14, "shift_type": &"object" } },
+				"data": { "SitelenSystem": { "sitelen_id": 14 } },
 			},
 			{
 				"atlas_coords": Vector2i(5, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 15, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 15 } },
 			},
 			{
 				"atlas_coords": Vector2i(6, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 16, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 16 } },
 			},
 			{
 				"atlas_coords": Vector2i(7, 6),
-				"data": { "SitelenSystem": { "sitelen_id": 17, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 17 } },
 			},
 			{
 				"atlas_coords": Vector2i(2, 7),
-				"data": { "SitelenSystem": { "sitelen_id": 18, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 18 } },
 			},
 			{
 				"atlas_coords": Vector2i(3, 7),
-				"data": { "SitelenSystem": { "sitelen_id": 19, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 19 } },
 			},
 			{
 				"atlas_coords": Vector2i(4, 7),
-				"data": { "SitelenSystem": { "sitelen_id": 20, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 20 } },
 			},
 			{
 				"atlas_coords": Vector2i(5, 7),
-				"data": { "SitelenSystem": { "sitelen_id": 21, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 21 } },
 			},
 			{
 				"atlas_coords": Vector2i(6, 7),
-				"data": { "SitelenSystem": { "sitelen_id": 22, "shift_type": &"wall" } },
+				"data": { "SitelenSystem": { "sitelen_id": 22 } },
 			},
 		]
 	},

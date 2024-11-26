@@ -46,31 +46,40 @@ func destroy() -> void:
 	_moveable_system.collided_with.disconnect(_on_collided_with)
 
 
-func shift() -> void:
-	entity.map.remove_entity(entity)
-	var entity_type := entity.EntityDB.get_by_name(shift_type)
-	if !entity_type.is_empty():
-		entity.map.add_entity(entity.pos, entity_type)
-
-
 func interact_with(other: Entity) -> void:
-	if sitelen_id == 7 and other.type == "pali":
-		shift()
-	elif sitelen_id == 16 and other.type == "jo":
+	# Pali can bring lawa sitelen to life
+	if other.type == "pali" and sitelen_id == 7:
+		entity.map.remove_entity(entity)
+		entity.map.add_entity(entity.pos, entity.EntityDB.get_by_name("lawa"))
+	
+	# Jo can go interact with sitelen
+	if other.type == "jo" and sitelen_id == 16:
 		var inventory: InventorySystem = other.get_system("InventorySystem")
 		if inventory != null:
 			inventory.store_item("tool")
 
 
 func _on_collided_with(other: Entity) -> void:
-	if sitelen_id == 0:
-		entity.layer = 1
+	# Jo can go through sitelen
+	if other.type == "jo":
+		if sitelen_id == 0:
+			entity.layer = 1
+		elif sitelen_id == 11:
+			# Simulate door
+			var inventory: InventorySystem = other.get_system("InventorySystem")
+			if inventory != null and inventory.item_type == &"tool":
+				entity.layer = 1
+			else:
+				var neighbors := entity.map.get_moore_neighbors(entity.pos)
+				for neighbor in neighbors:
+					var neighbor_inventory: InventorySystem = neighbor.get_system("InventorySystem")
+					if neighbor_inventory != null and neighbor_inventory.item_type == "tool":
+						entity.layer = 1
+						break
 	
-	if sitelen_id == 7 and other.type == "lawa":
+	# Two lawas colliding causes them both to disappear
+	if other.type == "lawa" and sitelen_id == 7:
 		entity.map.remove_entity(entity)
 		entity.map.remove_entity(other)
 		_audio_destroy.reparent(entity.get_parent())
 		_audio_destroy.play()
-	
-	if other.type == "jo":
-		shift()
