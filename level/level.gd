@@ -4,7 +4,8 @@ extends Node2D
 const Map := preload("res://maps/map.gd")
 
 const UI_OFFSET := Vector2i(0, 0)
-const INPUT_ECHO_DELTA := 0.27
+const INPUT_ECHO_DELTA_INITIAL := 0.28
+const INPUT_ECHO_DELTA := 0.18
 const INPUT_ACTIONS := [
 	"game_undo",
 	"game_right",
@@ -16,6 +17,7 @@ const INPUT_ACTIONS := [
 var _map_just_loaded := true
 var _last_input_action := ""
 var _last_input_delta := 0.0
+var _is_first_echo := true
 
 @onready var _root_window := get_tree().root
 @onready var _map := $"Map" as Map
@@ -28,19 +30,20 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	_last_input_delta += delta
-	var is_valid_delta := (_last_input_delta > INPUT_ECHO_DELTA)
-	
 	var next_input_action := ""
 	for input_action in INPUT_ACTIONS:
 		if Input.is_action_just_pressed(input_action):
 			next_input_action = input_action
+			_is_first_echo = true
 			break
 		
 	if next_input_action == "" and _map_just_loaded:
 		return
-	
 	_map_just_loaded = false
+	
+	_last_input_delta += delta
+	var echo_delta := INPUT_ECHO_DELTA_INITIAL if _is_first_echo else INPUT_ECHO_DELTA
+	var is_valid_delta := (_last_input_delta > echo_delta)
 	
 	var is_echo_input_action := false
 	if next_input_action == "" and _last_input_action != "":
@@ -55,6 +58,9 @@ func _process(delta: float) -> void:
 				break
 	
 	if next_input_action != _last_input_action or (is_echo_input_action and is_valid_delta):
+		if is_echo_input_action:
+			_is_first_echo = false
+		
 		_last_input_action = next_input_action
 		_last_input_delta = 0.0
 		
