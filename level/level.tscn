@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://b7y1p8c5pec2u"]
+[gd_scene load_steps=8 format=3 uid="uid://b7y1p8c5pec2u"]
 
 [ext_resource type="Script" path="res://level/level.gd" id="1_65htu"]
 [ext_resource type="PackedScene" uid="uid://da6m7u64kxig3" path="res://maps/map_a_001.tscn" id="2_qvgb0"]
 [ext_resource type="AudioStream" uid="uid://b8lad7l7gxiv7" path="res://assets/music/ville_seppanen.ogg" id="3_pfsvs"]
+[ext_resource type="Shader" path="res://level/palette_swap.gdshader" id="4_4deoq"]
+[ext_resource type="Texture2D" uid="uid://p58ivi8wldoy" path="res://assets/palettes/1bit_plus.png" id="5_g02hn"]
+[ext_resource type="Script" path="res://level/palette_swap.gd" id="7_ck1ch"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m6i16"]
+shader = ExtResource("4_4deoq")
+shader_parameter/palette_default = ExtResource("5_g02hn")
+shader_parameter/palette_swap = ExtResource("5_g02hn")
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_65htu")
@@ -15,3 +23,16 @@ editor_draw_screen = false
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_pfsvs")
 parameters/looping = true
+
+[node name="PostProcess" type="CanvasLayer" parent="."]
+layer = 128
+
+[node name="PaletteSwap" type="ColorRect" parent="PostProcess"]
+material = SubResource("ShaderMaterial_m6i16")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+script = ExtResource("7_ck1ch")
