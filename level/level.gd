@@ -2,7 +2,10 @@ extends Node2D
 
 
 const Map := preload("res://maps/map.gd")
+const MapDB := preload("res://maps/map_db.gd")
+const GameState := preload("res://level/game_state.gd")
 
+const SAVEGAME_PATH := "user://savegame.tres"
 const UI_OFFSET := Vector2i(0, 0)
 const INPUT_ECHO_DELTA_INITIAL := 0.28
 const INPUT_ECHO_DELTA := 0.18
@@ -18,6 +21,8 @@ var _map_just_loaded := true
 var _last_input_action := ""
 var _last_input_delta := 0.0
 var _is_first_echo := true
+var _game_state := GameState.new()
+var _loaded_map_id := 0
 
 @onready var _root_window := get_tree().root
 @onready var _map := $"Map" as Map
@@ -25,6 +30,13 @@ var _is_first_echo := true
 
 
 func _ready() -> void:
+	# Check if this is the right map, otherwise switch to map
+	_load_game_state()
+	if !OS.has_feature("editor") and _game_state.current_map_id != _loaded_map_id:
+		_change_map.call_deferred(_game_state.current_map_id)
+	else:
+		_game_state.current_map_id = _loaded_map_id
+	
 	_root_window.size_changed.connect(_on_size_changed)
 	_load_map()
 
@@ -80,10 +92,24 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
 		_map.select_next()
+	elif event.is_action_pressed("game_next_map"):
+		_change_map(_loaded_map_id + 1)
+	elif event.is_action_pressed("game_prev_map"):
+		_change_map(_loaded_map_id - 1)
 
 
-func _change_map(id: String) -> void:
-	var map_path := "res://maps/map_%s.tscn" % [id]
+func _change_map(id: int) -> void:
+	if id < 0:
+		id = 0
+	
+	if id >= MapDB.MAPS.size():
+		print("Game finished")
+		return
+	
+	_loaded_map_id = id
+	_save_game_state()
+	
+	var map_path := "res://maps/%s.tscn" % [MapDB.MAPS[_loaded_map_id]]
 	var MapScene := load(map_path) as PackedScene
 	var new_map := MapScene.instantiate()
 	
@@ -102,6 +128,18 @@ func _load_map() -> void:
 
 func _unload_map() -> void:
 	pass
+
+
+func _load_game_state() -> void:
+	if FileAccess.file_exists(SAVEGAME_PATH):
+		var loaded_res := ResourceLoader.load(SAVEGAME_PATH)
+		if loaded_res is GameState:
+			_game_state = loaded_res
+
+
+func _save_game_state() -> void:
+	_game_state.current_map_id = _loaded_map_id
+	ResourceSaver.save(_game_state, SAVEGAME_PATH)
 
 
 func _on_size_changed() -> void:	
