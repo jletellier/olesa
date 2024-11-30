@@ -97,7 +97,10 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if !_map_just_finished and event.is_action_pressed("ui_focus_next"):
+	if _map_just_finished:
+		return
+	
+	if event.is_action_pressed("ui_focus_next"):
 		_map.select_next()
 	
 	if event.is_action_pressed("game_next_map"):
@@ -112,7 +115,7 @@ func _change_map(id: int) -> void:
 	
 	if id >= MapDB.MAPS.size():
 		print("Game finished")
-		return
+		id = 0
 	
 	_loaded_map_id = id
 	_save_game_state()

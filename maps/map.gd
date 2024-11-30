@@ -102,6 +102,7 @@ func _history_transaction_undo(transaction := []) -> void:
 				_selected_system = entity_system
 				_selected_system.selected = true
 	
+	_process_tick()
 	_history_undo_process = false
 	_history_transaction = []
 
@@ -225,11 +226,11 @@ func remove_entity(entity: Entity) -> void:
 		select_next()
 
 
-func move_entity(entity: Entity, old_pos: Vector2i) -> void:
+func move_entity(entity: Entity, old_pos: Vector2i, old_layer: int) -> void:
 	entity.position = _block_layer.map_to_local(entity.pos)
 	
-	if _entity_map.erase(Vector3i(old_pos.x, old_pos.y, 0)):
-		_entity_map[Vector3i(entity.pos.x, entity.pos.y, 0)] = entity
+	if _entity_map.erase(Vector3i(old_pos.x, old_pos.y, old_layer)):
+		_entity_map[Vector3i(entity.pos.x, entity.pos.y, entity.layer)] = entity
 
 
 func get_entity(pos: Vector2i, layer := 0) -> Entity:

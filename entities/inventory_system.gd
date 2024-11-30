@@ -6,10 +6,11 @@ signal items_changed()
 @export var item_type: StringName:
 	get: return _item_type
 	set(value):
-		var changed := (_item_type != value)
+		var old_value := _item_type
 		_item_type = value
-		if changed:
+		if old_value != value:
 			items_changed.emit()
+			emit_history_transaction("item_type", old_value)
 
 ## Indicates whether items can be stored in this inventory.
 ## Set this to false for collectable resources.

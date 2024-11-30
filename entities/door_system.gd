@@ -35,7 +35,12 @@ func tick() -> void:
 
 
 func _set_is_open(value: bool) -> void:
+	var old_value := is_open
 	is_open = value
 	entity.layer = 1 if is_open else 0
+	
+	if old_value != value:
+		emit_history_transaction("is_open", old_value)
+	
 	if _sprite != null:
 		_sprite.texture = texture_hint if is_open else texture_door

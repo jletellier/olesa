@@ -30,7 +30,7 @@ parameters/looping = true
 stream = ExtResource("4_babbr")
 
 [node name="MapFinishTimer" type="Timer" parent="."]
-wait_time = 6.0
+wait_time = 5.0
 one_shot = true
 
 [node name="PostProcess" type="CanvasLayer" parent="."]

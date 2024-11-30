@@ -83,13 +83,12 @@ func _set_pos(value: Vector2i) -> void:
 	pos = value
 	
 	if map != null and pos != old_pos:
-		map.move_entity(self, old_pos)
+		map.move_entity(self, old_pos, layer)
 
 
 func _set_layer(value: int) -> void:
 	var old_layer := layer
 	layer = value
 	
-	if map != null:
-		map._entity_map.erase(Vector3i(pos.x, pos.y, old_layer))
-		map._entity_map[Vector3i(pos.x, pos.y, layer)] = self
+	if map != null and layer != old_layer:
+		map.move_entity(self, pos, old_layer)
