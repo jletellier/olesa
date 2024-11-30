@@ -18,6 +18,7 @@ const INPUT_ACTIONS := [
 ]
 
 var _map_just_loaded := true
+var _map_just_finished := false
 var _last_input_action := ""
 var _last_input_delta := 0.0
 var _is_first_echo := true
@@ -27,6 +28,9 @@ var _loaded_map_id := 0
 @onready var _root_window := get_tree().root
 @onready var _map := $"Map" as Map
 @onready var _camera := $"Camera2D" as Camera2D
+@onready var _map_finish_player := $"MapFinishPlayer" as AudioStreamPlayer
+@onready var _map_finish_timer := $"MapFinishTimer" as Timer
+
 
 
 func _ready() -> void:
@@ -42,13 +46,16 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if _map_just_finished:
+		return
+	
 	var next_input_action := ""
 	for input_action in INPUT_ACTIONS:
 		if Input.is_action_just_pressed(input_action):
 			next_input_action = input_action
 			_is_first_echo = true
 			break
-		
+	
 	if next_input_action == "" and _map_just_loaded:
 		return
 	_map_just_loaded = false
@@ -90,9 +97,10 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_focus_next"):
+	if !_map_just_finished and event.is_action_pressed("ui_focus_next"):
 		_map.select_next()
-	elif event.is_action_pressed("game_next_map"):
+	
+	if event.is_action_pressed("game_next_map"):
 		_change_map(_loaded_map_id + 1)
 	elif event.is_action_pressed("game_prev_map"):
 		_change_map(_loaded_map_id - 1)
@@ -122,12 +130,14 @@ func _change_map(id: int) -> void:
 
 
 func _load_map() -> void:
+	_map.goals_reached.connect(_on_map_goals_reached)
 	_on_size_changed.call_deferred()
 	_map_just_loaded = true
+	_map_just_finished = false
 
 
 func _unload_map() -> void:
-	pass
+	_map.goals_reached.disconnect(_on_map_goals_reached)
 
 
 func _load_game_state() -> void:
@@ -162,3 +172,12 @@ func _on_size_changed() -> void:
 			new_scale_factor = min(new_scale_factor + 1, 12)
 	
 	_root_window.content_scale_factor = new_scale_factor
+
+
+func _on_map_goals_reached() -> void:
+	_map_just_finished = true
+	_map_finish_player.play()
+	_map_finish_timer.timeout.connect(func():
+		_change_map(_loaded_map_id + 1)
+	, CONNECT_ONE_SHOT)
+	_map_finish_timer.start()

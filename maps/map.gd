@@ -5,12 +5,17 @@ const Entity := preload("res://entities/entity.gd")
 const EntityDB := preload("res://entities/entity_db.gd")
 const EntitySystem := preload("res://entities/entity_system.gd")
 const SelectableSystem := preload("res://entities/selectable_system.gd")
+const SurfaceSystem := preload("res://entities/surface_system.gd")
 
 const TILE_EMPTY := Vector2i(-1, -1)
+
+signal goals_reached()
 
 var _entity_map := {} # Typing: Dictionary[Vector3i, Entity]
 var _selectable_systems: Array[SelectableSystem] = []
 var _selected_system: SelectableSystem
+var _surface_system_count := 0
+var _surface_system_finished_count := 0
 var _history := []
 var _history_transaction := []
 var _history_undo_process := false
@@ -188,15 +193,25 @@ func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
 		entity.tick()
 		entity.tick()
 	
-	var selectable_system := entity.get_system("SelectableSystem")
-	if selectable_system is SelectableSystem:
+	var selectable_system: SelectableSystem = entity.get_system("SelectableSystem")
+	if selectable_system != null:
 		_selectable_systems.append(selectable_system)
+	
+	var surface_system: SurfaceSystem = entity.get_system("SurfaceSystem")
+	if surface_system != null:
+		_surface_system_count += 1
+		surface_system.has_object_changed.connect(_on_surface_system_has_object_changed)
 
 
 func remove_entity(entity: Entity) -> void:
-	var selectable_system := entity.get_system("SelectableSystem")
-	if selectable_system is SelectableSystem:
+	var selectable_system: SelectableSystem = entity.get_system("SelectableSystem")
+	if selectable_system != null:
 		_selectable_systems.erase(selectable_system)
+	
+	var surface_system: SurfaceSystem = entity.get_system("SurfaceSystem")
+	if surface_system != null:
+		_surface_system_count -= 1
+		surface_system.has_object_changed.disconnect(_on_surface_system_has_object_changed)
 	
 	entity.history_transaction.disconnect(_on_history_transaction)
 	
@@ -253,3 +268,11 @@ func _on_history_transaction(
 	var entity_pos := Vector3i(entity.pos.x, entity.pos.y, entity.layer)
 	var step := ["system_update", entity_pos, system, attribute, value]
 	_history_transaction_add(step)
+
+
+func _on_surface_system_has_object_changed(_old_value: bool, new_value: bool) -> void:
+	if new_value:
+		_surface_system_finished_count += 1
+	
+	if _surface_system_count > 0 and _surface_system_finished_count >= _surface_system_count:
+		goals_reached.emit.call_deferred()

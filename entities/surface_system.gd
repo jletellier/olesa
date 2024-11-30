@@ -4,6 +4,8 @@ extends "res://entities/entity_system.gd"
 const MoveableSystem := preload("res://entities/moveable_system.gd")
 const EntitySuccess := preload("res://ui/hints/entity_success.gd")
 
+signal has_object_changed(old_value: bool, new_value: bool)
+
 @export var default_texture: Texture2D
 @export var object_texture: Texture2D
 
@@ -13,6 +15,7 @@ var has_object := false:
 		has_object = value
 		_sprite.texture = object_texture if has_object else default_texture
 		if old_value != value:
+			has_object_changed.emit(old_value, value)
 			emit_history_transaction("has_object", old_value)
 
 var _moveable_system: MoveableSystem
