@@ -1,10 +1,10 @@
-# Game Off 2024
+# o.l.e.s.a - Guide the Symbols
 
-This game is currently being developed as part of [Game Off 2024](https://itch.io/jam/game-off-2024), a game jam "challenging individuals and teams to build a game during the month of November". This year's theme is "SECRETS".
+This game was developed as part of [Game Off 2024](https://itch.io/jam/game-off-2024), a game jam "challenging individuals and teams to build a game during the month of November". This year's theme was "SECRETS".
 
 ## Play the Game
 
-TODO: Publish the game site here once it's ready.
+The current prototype is available on [Itch.io](https://liberabyte.itch.io/olesa).
 
 ## Licensing
 

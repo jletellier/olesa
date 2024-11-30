@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://bby4mfw1fn4ph"]
+
+[ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="1_p80j6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dy6wy"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(16, 128, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s71c7"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(16, 144, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxuxn"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(32, 128, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1kn84"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(32, 144, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ss11v"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(0, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dxviv"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(0, 176, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i0do1"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(0, 128, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vaxlm"]
+atlas = ExtResource("1_p80j6")
+region = Rect2(0, 144, 16, 16)
+
+[node name="LevelUI" type="CanvasLayer"]
+
+[node name="Navigation" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(24, 24)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -24.0
+offset_bottom = 24.0
+grow_horizontal = 0
+
+[node name="ButtonEsc" type="TouchScreenButton" parent="Navigation"]
+visible = false
+position = Vector2(0, 8)
+texture_normal = SubResource("AtlasTexture_dy6wy")
+texture_pressed = SubResource("AtlasTexture_s71c7")
+action = "ui_cancel"
+
+[node name="ButtonEdit" type="TouchScreenButton" parent="Navigation"]
+visible = false
+position = Vector2(0, 24)
+texture_normal = SubResource("AtlasTexture_wxuxn")
+texture_pressed = SubResource("AtlasTexture_1kn84")
+action = "game_edit"
+
+[node name="ButtonRestart" type="TouchScreenButton" parent="Navigation"]
+position = Vector2(0, 8)
+texture_normal = SubResource("AtlasTexture_ss11v")
+texture_pressed = SubResource("AtlasTexture_dxviv")
+action = "game_restart_map"
+
+[node name="ButtonUndo" type="TouchScreenButton" parent="Navigation"]
+position = Vector2(0, 40)
+texture_normal = SubResource("AtlasTexture_i0do1")
+texture_pressed = SubResource("AtlasTexture_vaxlm")
+action = "game_undo"

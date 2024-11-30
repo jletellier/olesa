@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bc3sy2adgwdsb"]
+[gd_scene load_steps=13 format=3 uid="uid://bc3sy2adgwdsb"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_mqubp"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_gtttm"]
@@ -13,6 +13,12 @@
 [sub_resource type="AtlasTexture" id="AtlasTexture_g23ok"]
 atlas = ExtResource("2_gtttm")
 region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cktwc"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_18vim"]
+size = Vector2(16, 16)
 
 [node name="Pali" type="Node2D"]
 script = ExtResource("1_mqubp")
@@ -31,6 +37,31 @@ stream = ExtResource("5_wyotn")
 
 [node name="AudioTargetFailure" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_ti3qy")
+
+[node name="SelectButton" type="TouchScreenButton" parent="."]
+shape = SubResource("RectangleShape2D_cktwc")
+
+[node name="ActionButtons" type="Node2D" parent="."]
+
+[node name="LeftButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(-16, 0)
+shape = SubResource("RectangleShape2D_18vim")
+action = "game_left"
+
+[node name="UpButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_18vim")
+action = "game_up"
+
+[node name="RightButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_18vim")
+action = "game_right"
+
+[node name="DownButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_18vim")
+action = "game_down"
 
 [node name="MoveableSystem" type="Node" parent="."]
 script = ExtResource("7_y77hf")

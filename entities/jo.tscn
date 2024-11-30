@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bsvas1mydwd7w"]
+[gd_scene load_steps=14 format=3 uid="uid://bsvas1mydwd7w"]
 
 [ext_resource type="Script" path="res://entities/entity.gd" id="1_n560h"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_kuyye"]
@@ -15,6 +15,12 @@
 atlas = ExtResource("2_kuyye")
 region = Rect2(0, 16, 16, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g6t8j"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8y4an"]
+size = Vector2(16, 16)
+
 [node name="Jo" type="Node2D"]
 script = ExtResource("1_n560h")
 
@@ -28,6 +34,31 @@ visible = false
 
 [node name="AudioAction" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_ourvx")
+
+[node name="SelectButton" type="TouchScreenButton" parent="."]
+shape = SubResource("RectangleShape2D_g6t8j")
+
+[node name="ActionButtons" type="Node2D" parent="."]
+
+[node name="LeftButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(-16, 0)
+shape = SubResource("RectangleShape2D_8y4an")
+action = "game_left"
+
+[node name="UpButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_8y4an")
+action = "game_up"
+
+[node name="RightButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(16, 0)
+shape = SubResource("RectangleShape2D_8y4an")
+action = "game_right"
+
+[node name="DownButton" type="TouchScreenButton" parent="ActionButtons"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_8y4an")
+action = "game_down"
 
 [node name="MoveableSystem" type="Node" parent="."]
 script = ExtResource("6_u2tp0")

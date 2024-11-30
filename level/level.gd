@@ -4,9 +4,10 @@ extends Node2D
 const Map := preload("res://maps/map.gd")
 const MapDB := preload("res://maps/map_db.gd")
 const GameState := preload("res://level/game_state.gd")
+const PaletteSwap := preload("res://level/palette_swap.gd")
 
 const SAVEGAME_PATH := "user://savegame.tres"
-const UI_OFFSET := Vector2i(0, 0)
+const UI_OFFSET := Vector2i(-32, 0)
 const INPUT_ECHO_DELTA_INITIAL := 0.28
 const INPUT_ECHO_DELTA := 0.18
 const INPUT_ACTIONS := [
@@ -30,7 +31,7 @@ var _loaded_map_id := 0
 @onready var _camera := $"Camera2D" as Camera2D
 @onready var _map_finish_player := $"MapFinishPlayer" as AudioStreamPlayer
 @onready var _map_finish_timer := $"MapFinishTimer" as Timer
-
+@onready var _palette_swap := $"PostProcess/PaletteSwap" as PaletteSwap
 
 
 func _ready() -> void:
@@ -107,6 +108,8 @@ func _input(event: InputEvent) -> void:
 		_change_map(_loaded_map_id + 1)
 	elif event.is_action_pressed("game_prev_map"):
 		_change_map(_loaded_map_id - 1)
+	elif event.is_action_pressed("game_restart_map"):
+		_change_map(_loaded_map_id)
 
 
 func _change_map(id: int) -> void:
@@ -137,6 +140,11 @@ func _load_map() -> void:
 	_on_size_changed.call_deferred()
 	_map_just_loaded = true
 	_map_just_finished = false
+	
+	if _loaded_map_id == 8:
+		_palette_swap.palette_id = 1
+	elif _loaded_map_id == 15:
+		_palette_swap.palette_id = 2
 
 
 func _unload_map() -> void:

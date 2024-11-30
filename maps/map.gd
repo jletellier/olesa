@@ -97,10 +97,7 @@ func _history_transaction_undo(transaction := []) -> void:
 			var entity := get_entity(Vector2i(entity_pos.x, entity_pos.y), entity_pos.z)
 			var entity_system: SelectableSystem = entity.get_system("SelectableSystem")
 			if entity_system != _selected_system:
-				if _selected_system != null:
-					_selected_system.selected = false
-				_selected_system = entity_system
-				_selected_system.selected = true
+				entity_system.selected = true
 	
 	_process_tick()
 	_history_undo_process = false
@@ -163,8 +160,6 @@ func select_next() -> void:
 	
 	var current_idx := -1
 	if _selected_system != null:
-		_selected_system.selected = false
-		
 		for i in range(_selectable_systems.size()):
 			var entity := _selectable_systems[i].entity
 			if entity.pos == _selected_system.entity.pos:
@@ -172,8 +167,16 @@ func select_next() -> void:
 				break
 	
 	var next_idx := (current_idx + 1) % _selectable_systems.size()
-	_selected_system = _selectable_systems[next_idx]
-	_selected_system.selected = true
+	var new_selected_system := _selectable_systems[next_idx]
+	new_selected_system.selected = true
+
+
+func set_selected_system(new_system: SelectableSystem) -> void:
+	if _selected_system != null:
+		_selected_system.selected = false
+	
+	if new_system != null:
+		_selected_system = new_system
 
 
 func add_entity(pos: Vector2i, type: Dictionary, data := {}) -> void:
@@ -274,6 +277,8 @@ func _on_history_transaction(
 func _on_surface_system_has_object_changed(_old_value: bool, new_value: bool) -> void:
 	if new_value:
 		_surface_system_finished_count += 1
+	else:
+		_surface_system_finished_count -= 1
 	
 	if _surface_system_count > 0 and _surface_system_finished_count >= _surface_system_count:
 		goals_reached.emit.call_deferred()
