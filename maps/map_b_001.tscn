@@ -1,7 +1,65 @@
-[gd_scene load_steps=3 format=4 uid="uid://bp5dqp8f8i56a"]
+[gd_scene load_steps=4 format=4 uid="uid://bp5dqp8f8i56a"]
 
 [ext_resource type="Script" path="res://maps/map.gd" id="1_10lsq"]
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="2_bb6hi"]
+
+[sub_resource type="GDScript" id="GDScript_fy70f"]
+resource_name = "dialogue_trigger"
+script/source = "extends Node
+
+
+const Map := preload(\"res://maps/map.gd\")
+const InventorySystem := preload(\"res://entities/inventory_system.gd\")
+const DoorSystem := preload(\"res://entities/door_system.gd\")
+
+const TEXT_ITEMS := [
+	\"Collect the key...\",
+	\"Open door with key...\",
+	\"\",
+]
+
+var _current_text_item := -1
+var _next_text_item := 0
+
+@onready var _map := $\"..\" as Map
+
+
+func _process(_delta: float) -> void:
+	if !_map._is_running:
+		return
+	
+	if _next_text_item != _current_text_item:
+		_current_text_item = _next_text_item
+	else:
+		return
+	
+	if _current_text_item == 0:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], false)
+		
+		var entities := _map.get_entities_with_system(\"InventorySystem\")
+		for entity in entities:
+			if entity.type == &\"jo\":
+				var system: InventorySystem = entity.get_system(\"InventorySystem\")
+				system.items_changed.connect(func():
+					_next_text_item += 1
+				, CONNECT_ONE_SHOT)
+				break
+	
+	elif _current_text_item == 1:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], false)
+		
+		var entities := _map.get_entities_with_system(\"DoorSystem\")
+		for entity in entities:
+			if entity.type == &\"door\":
+				var system: DoorSystem = entity.get_system(\"DoorSystem\")
+				system.is_open_changed.connect(func():
+					_next_text_item += 1
+				, CONNECT_ONE_SHOT)
+				break
+	
+	elif _current_text_item == 2:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], false)
+"
 
 [node name="Map" type="Node2D"]
 script = ExtResource("1_10lsq")
@@ -11,3 +69,6 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAA
 tile_set = ExtResource("2_bb6hi")
 
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="DialogueTrigger" type="Node" parent="."]
+script = SubResource("GDScript_fy70f")

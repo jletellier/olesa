@@ -1,13 +1,60 @@
-[gd_scene load_steps=3 format=4 uid="uid://da6m7u64kxig3"]
+[gd_scene load_steps=4 format=4 uid="uid://da6m7u64kxig3"]
 
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="1_lv4lc"]
 [ext_resource type="Script" path="res://maps/map.gd" id="1_om2nt"]
+
+[sub_resource type="GDScript" id="GDScript_owo0b"]
+resource_name = "dialogue_trigger"
+script/source = "extends Node
+
+
+const Map := preload(\"res://maps/map.gd\")
+const MoveableSystem := preload(\"res://entities/moveable_system.gd\")
+
+const TEXT_ITEMS := [
+	\"Try to move around...\",
+	\"\",
+]
+
+var _current_text_item := -1
+var _next_text_item := 0
+
+@onready var _map := $\"..\" as Map
+
+
+func _process(_delta: float) -> void:
+	if !_map._is_running:
+		return
+	
+	if _next_text_item != _current_text_item:
+		_current_text_item = _next_text_item
+	else:
+		return
+	
+	if _current_text_item == 0:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], false)
+		
+		var entities := _map.get_entities_with_system(\"MoveableSystem\")
+		for entity in entities:
+			if entity.type == &\"lawa\":
+				var system: MoveableSystem = entity.get_system(\"MoveableSystem\")
+				system.moved.connect(func():
+					_next_text_item += 1
+				, CONNECT_ONE_SHOT)
+				break
+		
+	elif _current_text_item == 1:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], true)
+"
 
 [node name="Map" type="Node2D"]
 script = ExtResource("1_om2nt")
 
 [node name="BlockLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAYAAAAAAAAAAAACAAYAAAAAAAAAAAABAAYAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAEAAYAAAAAAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAAAAAAAAAAGAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAACAAQAAAAAAAAAAAACAAMAAAAAAAAAAAACAAUAAAAAAAAAAAABAAIAAAACAAAAAAABAAUAAAADAAAAAAAEAAMAAAABAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAIAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAYAAAAAAAAAAAABAAIAAAACAAAAAAACAAUAAAAAAAAAAAACAAYAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAGAAUAAAAAAAAAAAAGAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAAAAAAAAAAAAAABAAUAAAADAAAAAAABAAYAAAAAAAAAAAACAAAAAAAAAAAAAAACAAMAAAAAAAAAAAACAAQAAAAAAAAAAAADAAAAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAAAAAAAAAAAAAAEAAMAAAABAAAAAAAEAAYAAAAAAAAAAAAFAAAAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAAAAAAAAAAAAAAGAAEAAAAAAAAAAAA=")
 tile_set = ExtResource("1_lv4lc")
 
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="DialogueTrigger" type="Node" parent="."]
+script = SubResource("GDScript_owo0b")

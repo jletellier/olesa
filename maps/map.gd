@@ -11,6 +11,9 @@ const TILE_EMPTY := Vector2i(-1, -1)
 
 signal goals_reached()
 
+@warning_ignore("unused_signal")
+signal dialogue_triggered(text: String, placement_top: bool)
+
 var _entity_map := {} # Typing: Dictionary[Vector3i, Entity]
 var _selectable_systems: Array[SelectableSystem] = []
 var _selected_system: SelectableSystem

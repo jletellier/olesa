@@ -1,7 +1,51 @@
-[gd_scene load_steps=3 format=4 uid="uid://b0hhbkbv6pl0g"]
+[gd_scene load_steps=4 format=4 uid="uid://b0hhbkbv6pl0g"]
 
 [ext_resource type="Script" path="res://maps/map.gd" id="1_mjbt8"]
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="2_pcrp6"]
+
+[sub_resource type="GDScript" id="GDScript_j7027"]
+resource_name = "dialogue_trigger"
+script/source = "extends Node
+
+
+const Map := preload(\"res://maps/map.gd\")
+const SelectableSystem := preload(\"res://entities/selectable_system.gd\")
+
+const TEXT_ITEMS := [
+	\"Press [TAB] to switch characters...\",
+	\"\",
+]
+
+var _current_text_item := -1
+var _next_text_item := 0
+
+@onready var _map := $\"..\" as Map
+
+
+func _process(_delta: float) -> void:
+	if !_map._is_running:
+		return
+	
+	if _next_text_item != _current_text_item:
+		_current_text_item = _next_text_item
+	else:
+		return
+	
+	if _current_text_item == 0:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], true)
+		
+		var entities := _map.get_entities_with_system(\"SelectableSystem\")
+		for entity in entities:
+			if entity.type == &\"lawa\":
+				var system: SelectableSystem = entity.get_system(\"SelectableSystem\")
+				system.selected_changed.connect(func():
+					_next_text_item += 1
+				, CONNECT_ONE_SHOT)
+				break
+		
+	elif _current_text_item == 1:
+		_map.dialogue_triggered.emit(TEXT_ITEMS[_current_text_item], true)
+"
 
 [node name="Map" type="Node2D"]
 script = ExtResource("1_mjbt8")
@@ -11,3 +55,6 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAIAAAAAAAA
 tile_set = ExtResource("2_pcrp6")
 
 [node name="Entities" type="Node2D" parent="."]
+
+[node name="DialogueTrigger" type="Node" parent="."]
+script = SubResource("GDScript_j7027")

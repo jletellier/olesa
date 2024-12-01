@@ -3,6 +3,8 @@ extends "res://entities/entity_system.gd"
 
 const InventorySystem := preload("res://entities/inventory_system.gd")
 
+signal is_open_changed()
+
 @export var texture_door: Texture2D
 @export var texture_hint: Texture2D
 
@@ -40,6 +42,7 @@ func _set_is_open(value: bool) -> void:
 	entity.layer = 1 if is_open else 0
 	
 	if old_value != value:
+		is_open_changed.emit()
 		emit_history_transaction("is_open", old_value)
 	
 	if _sprite != null:

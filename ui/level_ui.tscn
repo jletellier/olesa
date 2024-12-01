@@ -38,12 +38,12 @@ region = Rect2(0, 144, 16, 16)
 layer = 2
 
 [node name="Navigation" type="MarginContainer" parent="."]
-custom_minimum_size = Vector2(24, 24)
+custom_minimum_size = Vector2(20, 20)
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -24.0
-offset_bottom = 24.0
+offset_left = -20.0
+offset_bottom = 20.0
 grow_horizontal = 0
 
 [node name="ButtonEsc" type="TouchScreenButton" parent="Navigation"]
@@ -61,13 +61,13 @@ texture_pressed = SubResource("AtlasTexture_1kn84")
 action = "game_edit"
 
 [node name="ButtonRestart" type="TouchScreenButton" parent="Navigation"]
-position = Vector2(0, 8)
+position = Vector2(0, 4)
 texture_normal = SubResource("AtlasTexture_ss11v")
 texture_pressed = SubResource("AtlasTexture_dxviv")
 action = "game_restart_map"
 
 [node name="ButtonUndo" type="TouchScreenButton" parent="Navigation"]
-position = Vector2(0, 40)
+position = Vector2(0, 24)
 texture_normal = SubResource("AtlasTexture_i0do1")
 texture_pressed = SubResource("AtlasTexture_vaxlm")
 action = "game_undo"

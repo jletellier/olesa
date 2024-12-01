@@ -6,8 +6,12 @@ extends CanvasLayer
 
 @export var text_speed := 50
 
+@export var placement_top := true:
+	set = _set_placement_top
+
 var _text_length := 0
 
+@onready var _center_container := $"CenterContainer" as CenterContainer
 @onready var _label := $"CenterContainer/MarginContainer/MarginContainer/Label" as Label
 
 
@@ -37,3 +41,20 @@ func _set_text(value: String) -> void:
 	else:
 		visible = false
 		set_process(false)
+
+
+func _set_placement_top(value: bool) -> void:
+	placement_top = value
+	
+	if _center_container == null:
+		return
+	
+	_center_container.set_anchors_preset(
+			Control.PRESET_CENTER_TOP if placement_top else Control.PRESET_CENTER_BOTTOM, true)
+	
+	# FIXME: This is weird? Figure out why!
+	if placement_top:
+		_center_container.position.y = 0
+	else:
+		var viewport_size := get_tree().root.size / get_tree().root.content_scale_factor
+		_center_container.position.y = floor(viewport_size.y - _center_container.size.y)

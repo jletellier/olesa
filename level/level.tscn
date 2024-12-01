@@ -36,7 +36,6 @@ wait_time = 5.0
 one_shot = true
 
 [node name="Dialogue" parent="." instance=ExtResource("5_3ypry")]
-text = "Test dialogue!"
 
 [node name="LevelUI" parent="." instance=ExtResource("5_4mv5l")]
 

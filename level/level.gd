@@ -5,6 +5,7 @@ const Map := preload("res://maps/map.gd")
 const MapDB := preload("res://maps/map_db.gd")
 const GameState := preload("res://level/game_state.gd")
 const PaletteSwap := preload("res://level/palette_swap.gd")
+const Dialogue := preload("res://ui/dialogue.gd")
 
 const SAVEGAME_PATH := "user://savegame.tres"
 const UI_OFFSET := Vector2i(-32, 0)
@@ -32,6 +33,7 @@ var _loaded_map_id := 0
 @onready var _map_finish_player := $"MapFinishPlayer" as AudioStreamPlayer
 @onready var _map_finish_timer := $"MapFinishTimer" as Timer
 @onready var _palette_swap := $"PostProcess/PaletteSwap" as PaletteSwap
+@onready var _dialogue := $"Dialogue" as Dialogue
 
 
 func _ready() -> void:
@@ -137,6 +139,8 @@ func _change_map(id: int) -> void:
 
 func _load_map() -> void:
 	_map.goals_reached.connect(_on_map_goals_reached)
+	_map.dialogue_triggered.connect(_on_map_dialogue_triggered)
+	_dialogue.text = ""
 	_on_size_changed.call_deferred()
 	_map_just_loaded = true
 	_map_just_finished = false
@@ -149,6 +153,7 @@ func _load_map() -> void:
 
 func _unload_map() -> void:
 	_map.goals_reached.disconnect(_on_map_goals_reached)
+	_map.dialogue_triggered.disconnect(_on_map_dialogue_triggered)
 
 
 func _load_game_state() -> void:
@@ -192,3 +197,8 @@ func _on_map_goals_reached() -> void:
 		_change_map(_loaded_map_id + 1)
 	, CONNECT_ONE_SHOT)
 	_map_finish_timer.start()
+
+
+func _on_map_dialogue_triggered(text: String, placement_top: bool) -> void:
+	_dialogue.placement_top = placement_top
+	_dialogue.text = text
