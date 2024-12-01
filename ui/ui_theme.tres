@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://lec2r6o3n0co"]
+
+[ext_resource type="FontFile" uid="uid://jrksjdg4pvkj" path="res://assets/m5x7.ttf" id="1_858ma"]
+
+[resource]
+default_font = ExtResource("1_858ma")
+default_font_size = 16
+Label/colors/font_color = Color(0.898039, 0.231373, 0.266667, 1)

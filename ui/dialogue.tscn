@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://bx0eha1rw6f53"]
+
+[ext_resource type="Script" path="res://ui/dialogue.gd" id="1_jinyn"]
+[ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="1_m5usa"]
+[ext_resource type="Theme" uid="uid://lec2r6o3n0co" path="res://ui/ui_theme.tres" id="2_ccne4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3148n"]
+atlas = ExtResource("1_m5usa")
+region = Rect2(0, 192, 16, 16)
+
+[node name="Dialogue" type="CanvasLayer"]
+script = ExtResource("1_jinyn")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -8.5
+offset_right = 8.5
+offset_bottom = 23.0
+grow_horizontal = 2
+theme = ExtResource("2_ccne4")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_3148n")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="CenterContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
