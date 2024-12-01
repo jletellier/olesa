@@ -25,4 +25,5 @@ const MAPS := [
 	#"map_c_006",
 	#"map_c_007",
 	#"map_c_008",
+	"map_z_endscreen",
 ]

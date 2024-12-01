@@ -30,7 +30,7 @@ func _set_selected(value: bool) -> void:
 	var changed := (selected != value)
 	selected = value
 	
-	if changed and selected:
+	if changed and selected and entity.map != null:
 		entity.map.set_selected_system(self)
 	
 	if changed:

@@ -8,7 +8,7 @@ const PaletteSwap := preload("res://level/palette_swap.gd")
 const Dialogue := preload("res://ui/dialogue.gd")
 
 const SAVEGAME_PATH := "user://savegame.tres"
-const UI_OFFSET := Vector2i(-32, 0)
+const UI_OFFSET := Vector2i(-24, 0)
 const INPUT_ECHO_DELTA_INITIAL := 0.28
 const INPUT_ECHO_DELTA := 0.18
 const INPUT_ACTIONS := [
@@ -103,7 +103,7 @@ func _input(event: InputEvent) -> void:
 	if _map_just_finished:
 		return
 	
-	if event.is_action_pressed("ui_focus_next"):
+	if event.is_action_pressed("game_next_character"):
 		_map.select_next()
 	
 	if event.is_action_pressed("game_next_map"):
@@ -115,11 +115,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _change_map(id: int) -> void:
-	if id < 0:
-		id = 0
-	
-	if id >= MapDB.MAPS.size():
-		print("Game finished")
+	if id < 0 or id >= MapDB.MAPS.size():
 		id = 0
 	
 	_loaded_map_id = id
@@ -145,9 +141,11 @@ func _load_map() -> void:
 	_map_just_loaded = true
 	_map_just_finished = false
 	
+	if _loaded_map_id == 0:
+		_palette_swap.palette_id = 0
 	if _loaded_map_id == 8:
 		_palette_swap.palette_id = 1
-	elif _loaded_map_id == 15:
+	elif _loaded_map_id == 16:
 		_palette_swap.palette_id = 2
 
 
