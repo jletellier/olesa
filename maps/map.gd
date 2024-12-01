@@ -98,9 +98,10 @@ func _history_transaction_undo(transaction := []) -> void:
 		elif type == "selected_entity":
 			var entity_pos: Vector3i = step[1]
 			var entity := get_entity(Vector2i(entity_pos.x, entity_pos.y), entity_pos.z)
-			var entity_system: SelectableSystem = entity.get_system("SelectableSystem")
-			if entity_system != _selected_system:
-				entity_system.selected = true
+			if entity != null:
+				var entity_system: SelectableSystem = entity.get_system("SelectableSystem")
+				if entity_system != _selected_system:
+					entity_system.selected = true
 	
 	_process_tick()
 	_history_undo_process = false

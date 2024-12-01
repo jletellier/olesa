@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=4 uid="uid://ik7ysunxeuj0"]
+[gd_scene load_steps=19 format=4 uid="uid://ik7ysunxeuj0"]
 
 [ext_resource type="Script" path="res://maps/map.gd" id="1_0coe7"]
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="2_mpbfx"]
 [ext_resource type="Script" path="res://entities/entity.gd" id="3_xa73e"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="4_30w0s"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="5_0a35i"]
+[ext_resource type="AudioStream" uid="uid://cf8rw07qr7wnn" path="res://assets/music/summer.ogg" id="6_odw3w"]
 [ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="8_knin1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_32lb6"]
@@ -69,6 +70,8 @@ const TEXT_ITEMS := [
 
 var _current_text_item := -1
 var _next_text_item := 0
+var _is_ready := false
+var _level_music_player: AudioStreamPlayer
 
 var _sitelen_hints: Array[EntitySelect] = []
 
@@ -88,9 +91,23 @@ func _ready() -> void:
 		)
 
 
+func _post_ready() -> void:
+	_is_ready = true
+	_level_music_player = get_node(\"../../MusicPlayer\")
+	_level_music_player.stop()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_level_music_player.play()
+
+
 func _process(_delta: float) -> void:
 	if !_map._is_running:
 		return
+	
+	if !_is_ready:
+		_post_ready()
 	
 	if Input.is_action_just_pressed(\"game_next_character\"):
 		_next_text_item += 1
@@ -191,6 +208,11 @@ visible = false
 
 [node name="SelectButton" type="TouchScreenButton" parent="Entities/SitelenAle"]
 shape = SubResource("RectangleShape2D_w7k7k")
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_odw3w")
+autoplay = true
+parameters/looping = true
 
 [node name="ButtonNext" type="TouchScreenButton" parent="."]
 position = Vector2(96, 112)

@@ -10,9 +10,11 @@ extends CanvasLayer
 	set = _set_placement_top
 
 var _text_length := 0
+var _last_audio_delta := 0.0
 
 @onready var _center_container := $"CenterContainer" as CenterContainer
 @onready var _label := $"CenterContainer/MarginContainer/MarginContainer/Label" as Label
+@onready var _typing_audio := $"TypingAudio" as AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -21,9 +23,15 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_label.visible_ratio += delta * text_speed / _text_length
+	
 	if _label.visible_ratio >= 1:
 		_label.visible_ratio = 1
 		set_process(false)
+	
+	_last_audio_delta += delta
+	if _last_audio_delta > (4.0 / text_speed):
+		_last_audio_delta = 0.0
+		_typing_audio.play()
 
 
 func _set_text(value: String) -> void:
