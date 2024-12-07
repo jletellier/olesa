@@ -51,16 +51,19 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if _map_just_finished:
-		return
-	
 	if _step_delta > 0.0:
 		_step_delta += delta
 		_map.step_process(delta, STEP_DURATION)
 		
 		if _step_delta > STEP_DURATION:
 			_step_delta = 0.0
+			_last_input_delta = INPUT_ECHO_DELTA
 			_map.tick()
+		
+		return
+	
+	if _map_just_finished:
+		return
 	
 	var next_input_action := ""
 	for input_action in INPUT_ACTIONS:

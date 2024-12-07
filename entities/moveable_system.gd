@@ -22,13 +22,13 @@ var target_pos := Vector2i.ZERO
 var is_moving := false:
 	set = _set_is_moving
 
-var _animation_player: AnimationPlayer
 var _sprite: Sprite2D
+var _animation_player: AnimationPlayer
 
 
 func start() -> void:
 	_animation_player = entity.get_node_or_null("AnimationPlayer")
-	_sprite = entity.get_node_or_null("Sprite2D")
+	_sprite = entity.get_node("Sprite2D")
 
 
 func step_process(delta: float, duration: float) -> void:
@@ -62,7 +62,6 @@ func cascade_push(dir: Vector2i) -> void:
 	var cascade_entity: Entity = entity.map.get_entity(target_pos)
 	if cascade_entity != null:
 		var cascade_system: MoveableSystem = cascade_entity.get_system("MoveableSystem")
-	
 		if cascade_system != null:
 			collided_with.emit(cascade_entity)
 			cascade_system.collided_with.emit(entity)
@@ -70,15 +69,19 @@ func cascade_push(dir: Vector2i) -> void:
 			if !cascade_entity.is_queued_for_deletion():
 				cascade_system.cascade_push(dir)
 	
-	# Fetch target cell/entity again, in case it has been moved/removed
-	var target_cell := entity.map.get_cell(target_pos)
 	var target_entity: Entity = entity.map.get_entity(target_pos)
+	if target_entity != null:
+		var target_system: MoveableSystem = target_entity.get_system("MoveableSystem")
+		if target_system != null:
+			if !target_entity.is_queued_for_deletion() and !target_system.is_moving:
+				is_moving = false
+				return
+		
 	
-	# Action: Target is empty
-	if target_cell != entity.map.TILE_EMPTY or target_entity != null:
+	var target_cell := entity.map.get_cell(target_pos)
+	if target_cell != entity.map.TILE_EMPTY:
 		is_moving = false
-		#pos = target_pos
-		#moved.emit()
+		return
 
 
 func _set_is_moving(value: bool) -> void:
