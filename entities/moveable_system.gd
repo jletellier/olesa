@@ -19,10 +19,37 @@ var pos := Vector2i.ZERO:
 
 var target_pos := Vector2i.ZERO
 
+var is_moving := false:
+	set = _set_is_moving
 
-func action(dir: Vector2i) -> void:
+var _animation_player: AnimationPlayer
+var _sprite: Sprite2D
+
+
+func start() -> void:
+	_animation_player = entity.get_node_or_null("AnimationPlayer")
+	_sprite = entity.get_node_or_null("Sprite2D")
+
+
+func step_process(delta: float, duration: float) -> void:
+	if is_moving:
+		var dir := Vector2(target_pos - pos)
+		_sprite.position += dir * (delta / duration * 16)
+
+
+func tick() -> void:
+	if is_moving:
+		is_moving = false
+		_sprite.position = Vector2.ZERO
+		pos = target_pos
+		moved.emit()
+
+
+func action(dir: Vector2i) -> bool:
 	if can_initiate:
 		cascade_push(dir)
+		return is_moving
+	return false
 
 
 func cascade_push(dir: Vector2i) -> void:
@@ -30,6 +57,7 @@ func cascade_push(dir: Vector2i) -> void:
 		return
 	
 	target_pos = entity.pos + dir
+	is_moving = true
 	
 	var cascade_entity: Entity = entity.map.get_entity(target_pos)
 	if cascade_entity != null:
@@ -47,6 +75,24 @@ func cascade_push(dir: Vector2i) -> void:
 	var target_entity: Entity = entity.map.get_entity(target_pos)
 	
 	# Action: Target is empty
-	if target_cell == entity.map.TILE_EMPTY and target_entity == null:
-		pos = target_pos
-		moved.emit()
+	if target_cell != entity.map.TILE_EMPTY or target_entity != null:
+		is_moving = false
+		#pos = target_pos
+		#moved.emit()
+
+
+func _set_is_moving(value: bool) -> void:
+	is_moving = value
+	
+	if _animation_player != null:
+		if is_moving:
+			var anim_name := &"idle"
+			var dir := target_pos - pos
+			match(dir):
+				Vector2i.RIGHT: anim_name = &"right"
+				Vector2i.DOWN: anim_name = &"down"
+				Vector2i.LEFT: anim_name = &"left"
+				Vector2i.UP: anim_name = &"up"
+		
+			_animation_player.stop()
+			_animation_player.play(anim_name)

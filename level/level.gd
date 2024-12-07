@@ -10,7 +10,8 @@ const Dialogue := preload("res://ui/dialogue.gd")
 const SAVEGAME_PATH := "user://savegame.tres"
 const UI_OFFSET := Vector2i(-24, 0)
 const INPUT_ECHO_DELTA_INITIAL := 0.28
-const INPUT_ECHO_DELTA := 0.18
+const INPUT_ECHO_DELTA := 0.2
+const STEP_DURATION := 0.2
 const INPUT_ACTIONS := [
 	"game_undo",
 	"game_right",
@@ -24,6 +25,7 @@ var _map_just_finished := false
 var _last_input_action := ""
 var _last_input_delta := 0.0
 var _is_first_echo := true
+var _step_delta := 0.0
 var _game_state := GameState.new()
 var _loaded_map_id := 0
 
@@ -51,6 +53,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if _map_just_finished:
 		return
+	
+	if _step_delta > 0.0:
+		_step_delta += delta
+		_map.step_process(delta, STEP_DURATION)
+		
+		if _step_delta > STEP_DURATION:
+			_step_delta = 0.0
+			_map.tick()
 	
 	var next_input_action := ""
 	for input_action in INPUT_ACTIONS:
@@ -86,17 +96,18 @@ func _process(delta: float) -> void:
 		_last_input_action = next_input_action
 		_last_input_delta = 0.0
 		
-		match _last_input_action:
-			"game_undo":
-				_map.history_undo()
-			"game_right":
-				_map.process_action(Vector2i.RIGHT)
-			"game_down":
-				_map.process_action(Vector2i.DOWN)
-			"game_left":
-				_map.process_action(Vector2i.LEFT)
-			"game_up":
-				_map.process_action(Vector2i.UP)
+		if _last_input_action == "game_undo":
+			_map.history_undo()
+		else:
+			var dir_vec := Vector2i.ZERO
+			match _last_input_action:
+				"game_right": dir_vec = Vector2i.RIGHT
+				"game_down": dir_vec = Vector2i.DOWN
+				"game_left": dir_vec = Vector2i.LEFT
+				"game_up": dir_vec = Vector2i.UP
+			if dir_vec != Vector2i.ZERO:
+				if _map.action(dir_vec):
+					_step_delta = delta
 
 
 func _input(event: InputEvent) -> void:

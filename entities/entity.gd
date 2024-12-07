@@ -68,10 +68,18 @@ func tick() -> void:
 			system.tick()
 
 
-func action(dir: Vector2i) -> void:
+func step_process(delta: float, duration: float) -> void:
+	for system in _systems:
+		system.step_process(delta, duration)
+
+
+func action(dir: Vector2i) -> bool:
+	var successful := false
 	if is_running:
 		for system in _systems:
-			system.action(dir)
+			if system.action(dir):
+				successful = true
+	return successful
 
 
 func get_system(key: String, default: Variant = null) -> EntitySystem:

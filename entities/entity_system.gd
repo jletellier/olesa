@@ -24,8 +24,13 @@ func tick() -> void:
 
 
 @warning_ignore("unused_parameter")
-func action(dir: Vector2i) -> void:
+func step_process(delta: float, duration: float) -> void:
 	pass
+
+
+@warning_ignore("unused_parameter")
+func action(dir: Vector2i) -> bool:
+	return false
 
 
 func destroy() -> void:

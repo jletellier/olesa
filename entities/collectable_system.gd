@@ -11,12 +11,12 @@ func start() -> void:
 	_inventory = entity.get_system("InventorySystem")
 
 
-func action(dir: Vector2i) -> void:
+func action(dir: Vector2i) -> bool:
 	var target_pos := entity.pos + dir
 	var neighbor: Entity = entity.map._entity_map.get(Vector3i(target_pos.x, target_pos.y, 0))
 	
 	if neighbor == null:
-		return
+		return false
 	
 	var sitelen_system: SitelenSystem = neighbor.get_system("SitelenSystem")
 	if sitelen_system != null:
@@ -24,7 +24,7 @@ func action(dir: Vector2i) -> void:
 	
 	var neighbor_inventory: InventorySystem = neighbor.get_system("InventorySystem")
 	if neighbor_inventory == null:
-		return
+		return false
 	
 	if neighbor_inventory.can_retrieve_item() and _inventory.can_store_item():
 		var item_type := neighbor_inventory.retrieve_item()
@@ -32,3 +32,5 @@ func action(dir: Vector2i) -> void:
 	elif _inventory.can_retrieve_item() and neighbor_inventory.can_store_item():
 		var item_type := _inventory.retrieve_item()
 		neighbor_inventory.store_item(item_type)
+	
+	return true

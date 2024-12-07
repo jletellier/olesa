@@ -30,7 +30,7 @@ var _is_running := false
 
 func _ready() -> void:
 	_convert_entities()
-	_process_tick()
+	tick()
 	
 	_is_running = true
 	
@@ -103,7 +103,7 @@ func _history_transaction_undo(transaction := []) -> void:
 				if entity_system != _selected_system:
 					entity_system.selected = true
 	
-	_process_tick()
+	tick()
 	_history_undo_process = false
 	_history_transaction = []
 
@@ -125,18 +125,26 @@ func _history_transaction_save() -> void:
 	_history_transaction = []
 
 
-func _process_tick() -> void:
+func tick() -> void:
 	for entity in _entity_map.values():
 		if entity is Entity:
 			entity.tick()
+	
+	if _history_transaction.size() > 0:
+		_history_transaction_save()
 
 
-func process_action(dir: Vector2i) -> void:
+func step_process(delta: float, duration: float) -> void:
+	for entity in _entity_map.values():
+		if entity is Entity:
+			entity.step_process(delta, duration)
+
+
+func action(dir: Vector2i) -> bool:
 	if dir != Vector2i.ZERO and _selected_system != null:
-		_selected_system.entity.action(dir)
-		if _history_transaction.size() > 0:
-			_process_tick()
-			_history_transaction_save()
+		return _selected_system.entity.action(dir)
+	
+	return false
 
 
 func history_undo() -> void:

@@ -29,7 +29,7 @@ func destroy() -> void:
 	_selectable_system.selected_changed.disconnect(_on_selected_changed)
 
 
-func action(dir: Vector2i) -> void:
+func action(dir: Vector2i) -> bool:
 	var target_pos := entity.pos + dir
 	
 	var neighbor: Entity = entity.map.get_entity(target_pos, 0)
@@ -39,6 +39,8 @@ func action(dir: Vector2i) -> void:
 		_audio_target_success.play()
 	else:
 		_audio_target_failure.play()
+	
+	return false
 
 
 func _update_hints() -> void:

@@ -25,7 +25,6 @@ editor_draw_screen = false
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_pfsvs")
-autoplay = true
 parameters/looping = true
 
 [node name="MapFinishPlayer" type="AudioStreamPlayer" parent="."]
