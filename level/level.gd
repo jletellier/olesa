@@ -9,7 +9,7 @@ const Dialogue := preload("res://ui/dialogue.gd")
 
 const SAVEGAME_PATH := "user://savegame.tres"
 const UI_OFFSET := Vector2i(-24, 0)
-const INPUT_ECHO_DELTA_INITIAL := 0.28
+const INPUT_ECHO_DELTA_INITIAL := 0.2
 const INPUT_ECHO_DELTA := 0.2
 const STEP_DURATION := 0.2
 const INPUT_ACTIONS := [
@@ -74,6 +74,7 @@ func _process(delta: float) -> void:
 	
 	if next_input_action == "" and _map_just_loaded:
 		return
+	
 	_map_just_loaded = false
 	
 	_last_input_delta += delta

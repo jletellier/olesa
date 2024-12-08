@@ -1,6 +1,7 @@
 extends "res://entities/entity_system.gd"
 
 
+const EntitySelect := preload("res://ui/hints/entity_select.gd")
 const MoveableSystem := preload("res://entities/moveable_system.gd")
 
 signal collided_with(other: Entity)
@@ -24,23 +25,31 @@ var is_moving := false:
 
 var _sprite: Sprite2D
 var _animation_player: AnimationPlayer
+var _hint_select: EntitySelect
 
 
 func start() -> void:
 	_animation_player = entity.get_node_or_null("AnimationPlayer")
 	_sprite = entity.get_node("Sprite2D")
+	_hint_select = entity.get_node_or_null("HintSelect")
 
 
 func step_process(delta: float, duration: float) -> void:
 	if is_moving:
 		var dir := Vector2(target_pos - pos)
 		_sprite.position += dir * (delta / duration * 16)
+		
+		if _hint_select != null:
+			_hint_select.position = _sprite.position
 
 
 func tick() -> void:
 	if is_moving:
 		is_moving = false
 		_sprite.position = Vector2.ZERO
+		if _hint_select != null:
+			_hint_select.position = _sprite.position
+		
 		pos = target_pos
 		moved.emit()
 
