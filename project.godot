@@ -101,6 +101,21 @@ pointing/emulate_mouse_from_touch=false
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
+renderer/rendering_method="mobile"
 environment/defaults/default_clear_color=Color(0.0705882, 0.054902, 0.121569, 1)
+
+[xogot]
+
+project/editorState=[{
+"column": 0,
+"line": 0,
+"path": "res://level/level.gd",
+"type": "file"
+}, {
+"column": 0,
+"current": true,
+"line": 0,
+"path": "res://maps/map.gd",
+"type": "file"
+}]
+project/breakpoints={}
