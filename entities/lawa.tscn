@@ -1,14 +1,14 @@
 [gd_scene load_steps=18 format=3 uid="uid://caugnw42x3kq2"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_y3dho"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="1_y3dho"]
 [ext_resource type="Texture2D" uid="uid://dvh3615tr8jqx" path="res://assets/characters.png" id="2_xnh0b"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_nfsta"]
 [ext_resource type="AudioStream" uid="uid://dyqhgq7omjhjj" path="res://assets/sounds/rollover1.wav" id="4_eiucj"]
-[ext_resource type="Script" path="res://entities/selectable_system.gd" id="5_2orfa"]
+[ext_resource type="Script" uid="uid://bntbe7t6mfm0h" path="res://entities/selectable_system.gd" id="5_2orfa"]
 [ext_resource type="AudioStream" uid="uid://cg0tmlxnajsvp" path="res://assets/sounds/sfx_sounds_impact11.wav" id="5_jr6t1"]
-[ext_resource type="Script" path="res://entities/moveable_system.gd" id="6_aq4q1"]
-[ext_resource type="Script" path="res://entities/moveable_audio_system.gd" id="7_7ttow"]
-[ext_resource type="Script" path="res://entities/lawa_secret_system.gd" id="8_odmhf"]
+[ext_resource type="Script" uid="uid://toamgik71kd1" path="res://entities/moveable_system.gd" id="6_aq4q1"]
+[ext_resource type="Script" uid="uid://b484an8fgni5c" path="res://entities/moveable_audio_system.gd" id="7_7ttow"]
+[ext_resource type="Script" uid="uid://gogjycg52kdf" path="res://entities/lawa_secret_system.gd" id="8_odmhf"]
 
 [sub_resource type="Animation" id="Animation_htepq"]
 resource_name = "down"
@@ -147,11 +147,11 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_yhbk3"]
 _data = {
-"down": SubResource("Animation_htepq"),
-"idle": SubResource("Animation_fjjly"),
-"left": SubResource("Animation_2janb"),
-"right": SubResource("Animation_g861l"),
-"up": SubResource("Animation_ln4i7")
+&"down": SubResource("Animation_htepq"),
+&"idle": SubResource("Animation_fjjly"),
+&"left": SubResource("Animation_2janb"),
+&"right": SubResource("Animation_g861l"),
+&"up": SubResource("Animation_ln4i7")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6iuly"]
@@ -171,7 +171,7 @@ frame = 9
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_yhbk3")
+&"": SubResource("AnimationLibrary_yhbk3")
 }
 autoplay = "idle"
 next/down = &"idle"

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=4 uid="uid://bp5dqp8f8i56a"]
 
-[ext_resource type="Script" path="res://maps/map.gd" id="1_10lsq"]
+[ext_resource type="Script" uid="uid://8vul2ho3ub5i" path="res://maps/map.gd" id="1_10lsq"]
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="2_bb6hi"]
 
 [sub_resource type="GDScript" id="GDScript_fy70f"]

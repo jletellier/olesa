@@ -1,14 +1,14 @@
 [gd_scene load_steps=13 format=3 uid="uid://bc3sy2adgwdsb"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_mqubp"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="1_mqubp"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_gtttm"]
 [ext_resource type="PackedScene" uid="uid://bus45ea8g5esx" path="res://ui/hints/entity_target.tscn" id="3_e3fh8"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="3_olmo4"]
 [ext_resource type="AudioStream" uid="uid://7gxqe42oqttb" path="res://assets/sounds/Click_Soft_00.wav" id="5_wyotn"]
 [ext_resource type="AudioStream" uid="uid://vnx7uur2wrn0" path="res://assets/sounds/Click_Soft_01.wav" id="6_ti3qy"]
-[ext_resource type="Script" path="res://entities/selectable_system.gd" id="7_tr5hj"]
-[ext_resource type="Script" path="res://entities/moveable_system.gd" id="7_y77hf"]
-[ext_resource type="Script" path="res://entities/targetable_system.gd" id="8_fkm4n"]
+[ext_resource type="Script" uid="uid://bntbe7t6mfm0h" path="res://entities/selectable_system.gd" id="7_tr5hj"]
+[ext_resource type="Script" uid="uid://toamgik71kd1" path="res://entities/moveable_system.gd" id="7_y77hf"]
+[ext_resource type="Script" uid="uid://16nj0m7jqrav" path="res://entities/targetable_system.gd" id="8_fkm4n"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g23ok"]
 atlas = ExtResource("2_gtttm")

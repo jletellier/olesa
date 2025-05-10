@@ -1,10 +1,10 @@
 [gd_scene load_steps=30 format=3 uid="uid://b61yefdxdmli8"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_aivgv"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="1_aivgv"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_sd0sq"]
 [ext_resource type="AudioStream" uid="uid://cg0tmlxnajsvp" path="res://assets/sounds/sfx_sounds_impact11.wav" id="3_x53xn"]
-[ext_resource type="Script" path="res://entities/moveable_system.gd" id="4_mgcl7"]
-[ext_resource type="Script" path="res://entities/sitelen_system.gd" id="5_m0i63"]
+[ext_resource type="Script" uid="uid://toamgik71kd1" path="res://entities/moveable_system.gd" id="4_mgcl7"]
+[ext_resource type="Script" uid="uid://bbvwuktiawlix" path="res://entities/sitelen_system.gd" id="5_m0i63"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tuvjj"]
 atlas = ExtResource("2_sd0sq")

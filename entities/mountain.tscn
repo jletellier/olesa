@@ -1,13 +1,13 @@
 [gd_scene load_steps=11 format=3 uid="uid://8hdqxg6ftswt"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_njwcv"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="1_njwcv"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_54xt5"]
 [ext_resource type="PackedScene" uid="uid://c5j5434t7nfa2" path="res://ui/hints/entity_possess.tscn" id="4_3ktd7"]
 [ext_resource type="PackedScene" uid="uid://c1gf5gur01aib" path="res://ui/hints/entity_progress.tscn" id="4_q65g5"]
 [ext_resource type="AudioStream" uid="uid://bcn7rfyalgaom" path="res://assets/sounds/link.wav" id="6_80idj"]
-[ext_resource type="Script" path="res://entities/mineable_system.gd" id="6_ttola"]
-[ext_resource type="Script" path="res://entities/inventory_system.gd" id="7_5705r"]
-[ext_resource type="Script" path="res://entities/inventory_fx_system.gd" id="8_wulga"]
+[ext_resource type="Script" uid="uid://c3h7hl7dti6i8" path="res://entities/mineable_system.gd" id="6_ttola"]
+[ext_resource type="Script" uid="uid://bsxmlpnyj475j" path="res://entities/inventory_system.gd" id="7_5705r"]
+[ext_resource type="Script" uid="uid://c8x6oyebvmqt4" path="res://entities/inventory_fx_system.gd" id="8_wulga"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_02wl4"]
 atlas = ExtResource("2_54xt5")

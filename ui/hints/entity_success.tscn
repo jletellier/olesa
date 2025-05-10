@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://gm5ut26i1o8n"]
 
-[ext_resource type="Script" path="res://ui/hints/entity_success.gd" id="1_l35rg"]
+[ext_resource type="Script" uid="uid://cc7e35bwfjenc" path="res://ui/hints/entity_success.gd" id="1_l35rg"]
 [ext_resource type="Texture2D" uid="uid://cmpqct043btjm" path="res://assets/hint_animation_success.png" id="2_gjr8u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2qjv"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://c1gf5gur01aib"]
 
-[ext_resource type="Script" path="res://ui/hints/entity_progress.gd" id="1_bxgkq"]
+[ext_resource type="Script" uid="uid://pkms1o17w3mn" path="res://ui/hints/entity_progress.gd" id="1_bxgkq"]
 [ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="2_wl2s4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ekvqq"]

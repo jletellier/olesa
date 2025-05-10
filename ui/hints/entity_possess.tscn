@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://c5j5434t7nfa2"]
 
-[ext_resource type="Script" path="res://ui/hints/entity_possess.gd" id="1_rjg6n"]
+[ext_resource type="Script" uid="uid://b8yp3mmx0yprq" path="res://ui/hints/entity_possess.gd" id="1_rjg6n"]
 [ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="2_lwyqw"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_roc6b"]

@@ -1,10 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://vswtppcekq0g"]
 
-[ext_resource type="Script" path="res://entities/entity.gd" id="1_w8nqi"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="1_w8nqi"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="2_dxdso"]
-[ext_resource type="Script" path="res://entities/moveable_system.gd" id="4_akxus"]
+[ext_resource type="Script" uid="uid://toamgik71kd1" path="res://entities/moveable_system.gd" id="4_akxus"]
 [ext_resource type="AudioStream" uid="uid://cg0tmlxnajsvp" path="res://assets/sounds/sfx_sounds_impact11.wav" id="4_ujcjs"]
-[ext_resource type="Script" path="res://entities/destructible_system.gd" id="5_541xg"]
+[ext_resource type="Script" uid="uid://dd6ubd17nmjnp" path="res://entities/destructible_system.gd" id="5_541xg"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j2147"]
 atlas = ExtResource("2_dxdso")

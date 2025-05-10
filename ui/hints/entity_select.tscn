@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://mky2e0ubjms7"]
 
 [ext_resource type="Texture2D" uid="uid://1lx548tjhqdu" path="res://assets/hint_animations.png" id="1_cg1au"]
-[ext_resource type="Script" path="res://ui/hints/entity_select.gd" id="1_e87kr"]
+[ext_resource type="Script" uid="uid://wcw8xhlqnyox" path="res://ui/hints/entity_select.gd" id="1_e87kr"]
 [ext_resource type="AudioStream" uid="uid://fp13nuhpxlkd" path="res://assets/sounds/switch15.wav" id="3_dp03j"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vlss6"]

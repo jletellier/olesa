@@ -1,14 +1,14 @@
 [gd_scene load_steps=11 format=3 uid="uid://b7y1p8c5pec2u"]
 
-[ext_resource type="Script" path="res://level/level.gd" id="1_65htu"]
+[ext_resource type="Script" uid="uid://s612djsw505o" path="res://level/level.gd" id="1_65htu"]
 [ext_resource type="PackedScene" uid="uid://da6m7u64kxig3" path="res://maps/map_a_001.tscn" id="2_qvgb0"]
 [ext_resource type="AudioStream" uid="uid://b8lad7l7gxiv7" path="res://assets/music/ville_seppanen.ogg" id="3_pfsvs"]
-[ext_resource type="Shader" path="res://level/palette_swap.gdshader" id="4_4deoq"]
+[ext_resource type="Shader" uid="uid://bqedqdhmplhmg" path="res://level/palette_swap.gdshader" id="4_4deoq"]
 [ext_resource type="AudioStream" uid="uid://ccood6xyj0yds" path="res://assets/sounds/exit.wav" id="4_babbr"]
 [ext_resource type="PackedScene" uid="uid://bx0eha1rw6f53" path="res://ui/dialogue.tscn" id="5_3ypry"]
 [ext_resource type="PackedScene" uid="uid://bby4mfw1fn4ph" path="res://ui/level_ui.tscn" id="5_4mv5l"]
 [ext_resource type="Texture2D" uid="uid://p58ivi8wldoy" path="res://assets/palettes/1bit_plus.png" id="5_g02hn"]
-[ext_resource type="Script" path="res://level/palette_swap.gd" id="7_ck1ch"]
+[ext_resource type="Script" uid="uid://do5m3vossswro" path="res://level/palette_swap.gd" id="7_ck1ch"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m6i16"]
 shader = ExtResource("4_4deoq")

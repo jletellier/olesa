@@ -1,8 +1,8 @@
 [gd_scene load_steps=19 format=4 uid="uid://ik7ysunxeuj0"]
 
-[ext_resource type="Script" path="res://maps/map.gd" id="1_0coe7"]
+[ext_resource type="Script" uid="uid://8vul2ho3ub5i" path="res://maps/map.gd" id="1_0coe7"]
 [ext_resource type="TileSet" uid="uid://bsgva7b0q7hcr" path="res://maps/block_tileset.tres" id="2_mpbfx"]
-[ext_resource type="Script" path="res://entities/entity.gd" id="3_xa73e"]
+[ext_resource type="Script" uid="uid://c78mvpmj3xdu8" path="res://entities/entity.gd" id="3_xa73e"]
 [ext_resource type="Texture2D" uid="uid://bmgfwl4d4w600" path="res://assets/sprites.png" id="4_30w0s"]
 [ext_resource type="PackedScene" uid="uid://mky2e0ubjms7" path="res://ui/hints/entity_select.tscn" id="5_0a35i"]
 [ext_resource type="AudioStream" uid="uid://cf8rw07qr7wnn" path="res://assets/music/summer.ogg" id="6_odw3w"]
